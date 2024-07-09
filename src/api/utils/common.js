@@ -1,5 +1,5 @@
 // External module imports
-const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
 // Internal module imports
 const config = require('../../config/config');
@@ -60,7 +60,7 @@ const queryStringify = (object) => {
 };
 
 // generate unique id
-const genUniqueId = () => new mongoose.Types.ObjectId().toHexString();
+const genUniqueId = () => uuidv4();
 
 // create full url
 const getFullUrl = (req) =>

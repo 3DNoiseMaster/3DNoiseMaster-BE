@@ -11,7 +11,7 @@ const { httpStatus } = require('../../config/custom-http-status');
 const loginStatus = asyncHandler(async (req, res, next) => {
   res.status(httpStatus.OK).json(
     new SuccessResponse(httpStatus.OK, 'Member login status', {
-      user: req.user,
+      member: req.member,
     })
   );
 });

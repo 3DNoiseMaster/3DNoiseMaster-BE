@@ -3,7 +3,7 @@ const { body, query } = require('express-validator');
 
 // Internal module imports
 const {
-  isUsernameTaken,
+  isMembernameTaken,
 } = require('./customValidator');
 
 const login = [
@@ -38,7 +38,7 @@ const register = [
     .withMessage('ID must not contain anything other than alphanumeric characters')
     .trim()
     .escape()
-    .custom(isUsernameTaken),
+    .custom(isMembernameTaken),
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password is required and must be at least 8 characters long')

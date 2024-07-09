@@ -10,7 +10,7 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @access Private
  */
 const getTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.getTasks(req.user.id);
+  const tasks = await workspaceService.getTasks(req.member.id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
 });
 
@@ -20,7 +20,7 @@ const getTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const getTaskCount = asyncHandler(async (req, res, next) => {
-  const count = await workspaceService.getTaskCount(req.user.id);
+  const count = await workspaceService.getTaskCount(req.member.id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { count }));
 });
 
@@ -30,7 +30,7 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.downloadTasks(req.user.id);
+  const tasks = await workspaceService.downloadTasks(req.member.id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
 });
 
@@ -41,7 +41,7 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
+  const result = await workspaceService.requestNoiseRemoval(req.member.id, data);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
 });
 
@@ -52,7 +52,7 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
+  const result = await workspaceService.requestNoiseGeneration(req.member.id, data);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
 });
 
@@ -63,7 +63,7 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestErrorComparison(req.user.id, data);
+  const result = await workspaceService.requestErrorComparison(req.member.id, data);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
 });
 

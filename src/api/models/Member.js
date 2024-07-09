@@ -1,42 +1,38 @@
-// External module imports
 const { DataTypes, Model } = require('sequelize');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const sequelize = require('../../config/database');
-
-// Internal module imports
-const config = require('../../config/config');
 const { allRoles } = require('../../config/roles');
 
-/**
- * Member Model
- */
 class Member extends Model {
   async isPasswordMatch(password) {
     return bcrypt.compare(password, this.password);
   }
 
-  static async findByUsername(id) {
-    return this.findOne({ where: { id } });
+  static async findByMembername(membername) {
+    return this.findOne({ where: { membername } });
   }
 }
 
 Member.init(
   {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'Name is required' },
-        isAlpha: { msg: 'Name must only contain letters' },
-      },
-    },
     id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      unique: true,
+    },
+    membername: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        notNull: { msg: 'ID is required' },
-        isAlphanumeric: { msg: 'ID must contain only letters and numbers' },
+        notNull: { msg: 'Membername is required' },
+        isAlphanumeric: { msg: 'Membername must contain only letters and numbers' },
       },
     },
     password: {
@@ -50,6 +46,14 @@ Member.init(
         },
       },
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Name is required' },
+        isAlpha: { msg: 'Name must only contain letters' },
+      },
+    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -61,26 +65,6 @@ Member.init(
         },
       },
     },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: allRoles.USER.alias,
-      validate: {
-        isIn: {
-          args: [Object.values(allRoles).map((role) => role.alias)],
-          msg: 'Invalid role',
-        },
-      },
-    },
-    profilePicture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: '',
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
   },
   {
     sequelize,
@@ -88,7 +72,7 @@ Member.init(
     hooks: {
       beforeSave: async (member, options) => {
         if (member.changed('password')) {
-          const salt = await bcrypt.genSalt(config.bcryptSaltRounds);
+          const salt = await bcrypt.genSalt(10);
           member.password = await bcrypt.hash(member.password, salt);
         }
       },

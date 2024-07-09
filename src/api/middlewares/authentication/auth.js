@@ -13,12 +13,12 @@ const verifyCallback = {};
  * Callbacks
  */
 verifyCallback.ACCESS = (req, resolve, reject) => {
-  return (err, user, info) => {
-    if (err || !user) {
+  return (err, member, info) => {
+    if (err || !member) {
       return reject(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage[httpStatus.UNAUTHORIZED]));
     }
-    // set user to request object
-    req.user = user;
+    // set member to request object
+    req.member = member;
     resolve();
   };
 };

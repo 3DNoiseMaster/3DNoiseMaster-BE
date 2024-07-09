@@ -9,10 +9,10 @@ const { tokenTypes } = require('../../config/tokens');
  * Token Model
  */
 class Token extends Model {
-  static async findToken({ userId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async findToken({ memberId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.findOne({
       where: {
-        userId,
+        memberId,
         deviceId,
         type,
         blacklisted,
@@ -20,10 +20,10 @@ class Token extends Model {
     });
   }
 
-  static async deleteOneToken({ userId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async deleteOneToken({ memberId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.destroy({
       where: {
-        userId,
+        memberId,
         deviceId,
         type,
         blacklisted,
@@ -31,10 +31,10 @@ class Token extends Model {
     });
   }
 
-  static async deleteManyToken({ userId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async deleteManyToken({ memberId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.destroy({
       where: {
-        userId,
+        memberId,
         type,
         blacklisted,
       },
@@ -44,16 +44,17 @@ class Token extends Model {
 
 Token.init(
   {
-    userId: {
+    id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Members', // should match the table name
-        key: 'id',
-      },
+      autoIncrement: true,
+      primaryKey: true,
     },
     token: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     type: {
@@ -66,11 +67,7 @@ Token.init(
         },
       },
     },
-    deviceId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    expireAt: {
+    expires: {
       type: DataTypes.DATE,
       allowNull: false,
     },

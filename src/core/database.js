@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
-const sequelize = new Sequelize(config.database, config.username, config.password, {
+const sequelize = new Sequelize(config.database, config.membername, config.password, {
   host: config.host,
   dialect: 'mysql',
 });

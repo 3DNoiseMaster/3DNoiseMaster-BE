@@ -3,12 +3,12 @@ const { body, param, query } = require('express-validator');
 
 // Internal module imports
 const {
-  isUsernameTaken,
+  isMembernameTaken,
   isObjectId,
   isInRoles,
 } = require('./customValidator');
 
-const createUser = [
+const createMember = [
   body('name')
     .isLength({ min: 1 })
     .withMessage('Name is required')
@@ -25,7 +25,7 @@ const createUser = [
     .withMessage('ID must not contain anything other than alphanumeric characters')
     .trim()
     .escape()
-    .custom(isUsernameTaken),
+    .custom(isMembernameTaken),
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password is required and must be at least 8 characters long')
@@ -40,7 +40,7 @@ const createUser = [
   body('role').custom(isInRoles).trim().escape(),
 ];
 
-const getUsers = [
+const getMembers = [
   query('search').optional().notEmpty().trim().escape(),
   query('name').optional().notEmpty().isIn(['asc', 'desc']).trim().escape(),
   query('role').optional().notEmpty().isIn(['asc', 'desc']).trim().escape(),
@@ -52,10 +52,10 @@ const getUsers = [
   query('include_metadata').optional().isBoolean(),
 ];
 
-const getUser = param('userId').custom(isObjectId);
+const getMember = param('memberId').custom(isObjectId);
 
-const updateUser = [
-  param('userId').custom(isObjectId),
+const updateMember = [
+  param('memberId').custom(isObjectId),
   body('name')
     .optional()
     .isLength({ min: 1 })
@@ -81,13 +81,13 @@ const updateUser = [
   body('isActive').optional().isBoolean().trim().escape(),
 ];
 
-const deleteUser = param('userId').custom(isObjectId);
+const deleteMember = param('memberId').custom(isObjectId);
 
 // Module exports
 module.exports = {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
+  createMember,
+  getMembers,
+  getMember,
+  updateMember,
+  deleteMember,
 };

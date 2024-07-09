@@ -12,9 +12,9 @@ const compression = require('../config/compression');
 const cors = require('../config/cors');
 const morgan = require('../config/morgan');
 const routes = require('../api/routes/v1');
-const errorHandler = require('../api/middleware/common/errorHandler');
-const notFoundHandler = require('../api/middleware/common/notFoundHandler');
-const ignoreFavicon = require('../api/middleware/common/ignoreFavicon');
+const errorHandler = require('../api/middlewares/common/errorHandler');
+const notFoundHandler = require('../api/middlewares/common/notFoundHandler');
+const ignoreFavicon = require('../api/middlewares/common/ignoreFavicon');
 
 // create express app
 const app = express();
@@ -58,7 +58,7 @@ app.use(cors);
 app.use(passport.initialize());
 
 // mount api v1 routes
-app.use('/api/v1', routes);
+app.use('/api', routes);
 
 // // catch the favicon.ico request and send a 204 status
 app.use(ignoreFavicon);

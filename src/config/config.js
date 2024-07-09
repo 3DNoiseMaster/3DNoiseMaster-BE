@@ -14,7 +14,7 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').default('development'),
     APP_NAME: Joi.string().description('Application name'),
     DB_NAME: Joi.string().required().description('Database name'),
-    DB_USER: Joi.string().required().description('Database user'),
+    DB_MEMBER: Joi.string().required().description('Database member'),
     DB_PASS: Joi.string().required().description('Database password'),
     DB_HOST: Joi.string().required().description('Database host'),
     ADMIN_EMAIL: Joi.string().default('admin@example.com').description('Admin registration email'),
@@ -50,7 +50,7 @@ module.exports = {
   appName: envVars.APP_NAME,
   database: {
     name: envVars.DB_NAME,
-    user: envVars.DB_USER,
+    member: envVars.DB_MEMBER,
     password: envVars.DB_PASS,
     host: envVars.DB_HOST,
   },

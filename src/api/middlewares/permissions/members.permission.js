@@ -4,7 +4,7 @@ const AccessControl = require('accesscontrol');
 // Internal module imports
 const { allRoles } = require('../../../config/roles');
 const { mappedPermissions, common } = require('../../utils');
-const { userService } = require('../../services');
+const { memberService } = require('../../services');
 const grantAccess = require('./grantAccess');
 
 const { asyncHandler } = common;
@@ -16,8 +16,8 @@ const roleRights = new AccessControl();
  * Define Resources
  */
 const resourceTypes = {
-  USER: {
-    alias: 'users',
+  MEMBER: {
+    alias: 'members',
     attributes: ['*'],
   },
 };
@@ -26,21 +26,21 @@ const resourceTypes = {
  * Define roles and grants one by one
  */
 
-// user role permissions
+// member role permissions
 roleRights
-  .grant(allRoles.USER.alias)
-  .readOwn(resourceTypes.USER.alias)
-  .updateOwn(resourceTypes.USER.alias)
-  .deleteOwn(resourceTypes.USER.alias);
+  .grant(allRoles.MEMBER.alias)
+  .readOwn(resourceTypes.MEMBER.alias)
+  .updateOwn(resourceTypes.MEMBER.alias)
+  .deleteOwn(resourceTypes.MEMBER.alias);
 
-// admin role inherits both user and editor role permissions
+// admin role inherits both member and editor role permissions
 roleRights
   .grant([allRoles.ADMIN.alias, allRoles.EDITOR.alias])
-  .extend(allRoles.USER.alias)
-  .createAny(resourceTypes.USER.alias)
-  .readAny(resourceTypes.USER.alias)
-  .updateAny(resourceTypes.USER.alias)
-  .deleteAny(resourceTypes.USER.alias);
+  .extend(allRoles.MEMBER.alias)
+  .createAny(resourceTypes.MEMBER.alias)
+  .readAny(resourceTypes.MEMBER.alias)
+  .updateAny(resourceTypes.MEMBER.alias)
+  .deleteAny(resourceTypes.MEMBER.alias);
 
 /**
  * Define action rules for the permission
@@ -48,52 +48,52 @@ roleRights
 
 const grantRules = function (actionAny, actionOwn) {
   return asyncHandler(async (req, res, next) => {
-    let { user } = req;
+    let { member } = req;
     let hasPermission;
     let hasRoleAccess = false;
 
-    // if there is no parameters named userId
-    if (!req.params.userId) {
+    // if there is no parameters named memberId
+    if (!req.params.memberId) {
       hasPermission = roleRights
-        .can(req.user.role)
-        [actionAny](resourceTypes.USER.alias);
+        .can(req.member.role)
+        [actionAny](resourceTypes.MEMBER.alias);
       hasRoleAccess = !!hasPermission.granted;
     }
 
-    // if loggedIn user access himself
-    if (req.params.userId && req.user.id === req.params.userId) {
+    // if loggedIn member access himself
+    if (req.params.memberId && req.member.id === req.params.memberId) {
       hasPermission = roleRights
-        .can(req.user.role)
-        [actionOwn](resourceTypes.USER.alias);
+        .can(req.member.role)
+        [actionOwn](resourceTypes.MEMBER.alias);
       hasRoleAccess = !!hasPermission.granted;
     }
 
-    // if loggedIn user access others
-    if (req.params.userId && req.user.id !== req.params.userId) {
+    // if loggedIn member access others
+    if (req.params.memberId && req.member.id !== req.params.memberId) {
       hasPermission = roleRights
-        .can(req.user.role)
-        [actionAny](resourceTypes.USER.alias);
+        .can(req.member.role)
+        [actionAny](resourceTypes.MEMBER.alias);
       if (hasPermission.granted) {
-        user = await userService.getUserById(req.params.userId);
+        member = await memberService.getMemberById(req.params.memberId);
         hasRoleAccess =
-          allRoles[req.user.role].level > allRoles[user.role].level ||
-          allRoles[req.user.role].level === allRoles.ADMIN.level;
+          allRoles[req.member.role].level > allRoles[member.role].level ||
+          allRoles[req.member.role].level === allRoles.ADMIN.level;
       }
     }
 
-    // if loggedIn user updating role
-    if (req.params.userId && hasRoleAccess && req.body.role) {
+    // if loggedIn member updating role
+    if (req.params.memberId && hasRoleAccess && req.body.role) {
       hasRoleAccess =
-        allRoles[req.user.role].level > allRoles[req.body.role].level ||
-        allRoles[req.user.role].level === allRoles.ADMIN.level;
+        allRoles[req.member.role].level > allRoles[req.body.role].level ||
+        allRoles[req.member.role].level === allRoles.ADMIN.level;
     }
 
-    // check whether loggedIn user is allowed to access
+    // check whether loggedIn member is allowed to access
     if (hasRoleAccess) {
-      req.user = user;
+      req.member = member;
       req.permission = mappedPermissions(
         true,
-        resourceTypes.USER.alias,
+        resourceTypes.MEMBER.alias,
         hasPermission.attributes
       );
     }
@@ -101,20 +101,20 @@ const grantRules = function (actionAny, actionOwn) {
   });
 };
 
-const grantUsersCreateRules = asyncHandler(async (req, res, next) => {
+const grantMembersCreateRules = asyncHandler(async (req, res, next) => {
   const hasPermission = roleRights
-    .can(req.user.role)
-    .createAny(resourceTypes.USER.alias);
+    .can(req.member.role)
+    .createAny(resourceTypes.MEMBER.alias);
 
   const hasRoleAccess =
-    allRoles[req.user.role].level > allRoles[req.body?.role]?.level ||
-    allRoles[req.user.role].level === allRoles.ADMIN.level;
+    allRoles[req.member.role].level > allRoles[req.body?.role]?.level ||
+    allRoles[req.member.role].level === allRoles.ADMIN.level;
 
-  // check whether loggedIn user is allowed to access
+  // check whether loggedIn member is allowed to access
   if (hasPermission.granted && hasRoleAccess) {
     req.permission = mappedPermissions(
       true,
-      resourceTypes.USER.alias,
+      resourceTypes.MEMBER.alias,
       hasPermission.attributes
     );
   }
@@ -122,25 +122,25 @@ const grantUsersCreateRules = asyncHandler(async (req, res, next) => {
 });
 
 // chain middleware
-const authorizeUsersCreatePermission = [grantUsersCreateRules, grantAccess];
+const authorizeMembersCreatePermission = [grantMembersCreateRules, grantAccess];
 
-const authorizeUsersReadPermission = [
+const authorizeMembersReadPermission = [
   grantRules('readAny', 'readOwn'),
   grantAccess,
 ];
-const authorizeUsersUpdatePermission = [
+const authorizeMembersUpdatePermission = [
   grantRules('updateAny', 'updateOwn'),
   grantAccess,
 ];
-const authorizeUsersDeletePermission = [
+const authorizeMembersDeletePermission = [
   grantRules('deleteAny', 'deleteOwn'),
   grantAccess,
 ];
 
 // Module exports
 module.exports = {
-  authorizeUsersCreatePermission,
-  authorizeUsersReadPermission,
-  authorizeUsersUpdatePermission,
-  authorizeUsersDeletePermission,
+  authorizeMembersCreatePermission,
+  authorizeMembersReadPermission,
+  authorizeMembersUpdatePermission,
+  authorizeMembersDeletePermission,
 };

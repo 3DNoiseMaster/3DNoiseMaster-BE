@@ -1,6 +1,6 @@
 // External module imports
-const mongoose = require('mongoose');
 const multer = require('multer');
+const { ValidationError } = require('sequelize');
 
 // Internal module imports
 const { httpStatus, httpMessage } = require('../../../config/custom-http-status');
@@ -21,7 +21,7 @@ const errorHandler = (err, req, res, next) => {
 
   if (!isOperationalError(err)) {
     const statusCode = error.statusCode ||
-      error instanceof mongoose.Error ||
+      error instanceof ValidationError ||
       error instanceof multer.MulterError
         ? httpStatus.BAD_REQUEST
         : httpStatus.INTERNAL_SERVER_ERROR;
