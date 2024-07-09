@@ -5,18 +5,22 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
 
 // Internal module imports
 const compression = require('../config/compression');
 const cors = require('../config/cors');
 const morgan = require('../config/morgan');
-// const routes = require('../api/routes/v1');
-// const errorHandler = require('../api/middleware/common/errorHandler');
-// const notFoundHandler = require('../api/middleware/common/notFoundHandler');
-// const ignoreFavicon = require('../api/middleware/common/ignoreFavicon');
+const routes = require('../api/routes/v1');
+const errorHandler = require('../api/middleware/common/errorHandler');
+const notFoundHandler = require('../api/middleware/common/notFoundHandler');
+const ignoreFavicon = require('../api/middleware/common/ignoreFavicon');
 
 // create express app
 const app = express();
+
+// Passport config
+require('../config/passport')(passport);
 
 // set number of trust proxies
 app.set('trust proxy', 1);
@@ -50,17 +54,20 @@ app.use(compression);
 // enable cors and pre-flight requests for all routes
 app.use(cors);
 
+// Initialize Passport
+app.use(passport.initialize());
+
 // mount api v1 routes
-// app.use('/api/v1', routes);
+app.use('/api/v1', routes);
 
 // // catch the favicon.ico request and send a 204 status
-// app.use(ignoreFavicon);
+app.use(ignoreFavicon);
 
 // // catch 404 and forward to error handler
-// app.use(notFoundHandler);
+app.use(notFoundHandler);
 
 // // error handler, send stacktrace only during development
-// app.use(errorHandler);
+app.use(errorHandler);
 
 // Module exports
 module.exports = app;
