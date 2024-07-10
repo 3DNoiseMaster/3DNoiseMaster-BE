@@ -43,7 +43,7 @@ if (error) {
 }
 
 // Sequelize 연결 설정
-const sequelize = new Sequelize(envVars.DB_NAME, envVars.DB_MEMBER, envVars.DB_PASS, {
+const sequelize = new Sequelize(envVars.DB_NAME, envVars.DB_USER, envVars.DB_PASS, {
   host: envVars.DB_HOST,
   dialect: 'mysql',
   logging: envVars.NODE_ENV === 'development' ? console.log : false,
@@ -71,7 +71,7 @@ module.exports = {
   appName: envVars.APP_NAME,
   database: {
     name: envVars.DB_NAME,
-    user: envVars.DB_MEMBER,
+    user: envVars.DB_USER,
     password: envVars.DB_PASS,
     host: envVars.DB_HOST,
   },
