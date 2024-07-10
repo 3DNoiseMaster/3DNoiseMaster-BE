@@ -1,4 +1,4 @@
 // Module exports
 module.exports.workspaceController = require('./workspaceController');
-module.exports.memberController = require('./memberController');
+module.exports.userController = require('./userController');
 module.exports.authController = require('./authController');

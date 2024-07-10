@@ -7,7 +7,7 @@ const { authLimiter, slowDownMiddleware } = require('../../middlewares/authentic
 const { SuccessResponse } = require('../../utils');
 
 const displayRoutes = require('./displayRoutes');
-const memberRoutes = require('./memberRoutes');
+const userRoutes = require('./userRoutes');
 const workspaceRoutes = require('./workspaceRoutes');
 
 const router = express.Router();
@@ -15,8 +15,8 @@ const router = express.Router();
 // mount display routes
 router.use('/display', displayRoutes);
 
-// mount member routes with authLimiter and slowDownMiddleware
-router.use('/member', authLimiter, slowDownMiddleware, memberRoutes);
+// mount user routes with authLimiter and slowDownMiddleware
+router.use('/user', authLimiter, slowDownMiddleware, userRoutes);
 
 // mount workspace routes
 router.use('/workspace', workspaceRoutes);

@@ -5,13 +5,13 @@ const { httpStatus } = require('../../config/custom-http-status');
 
 /**
  * @desc Get login status
- * @route GET /api/v1/member/login/status
+ * @route GET /api/v1/user/login/status
  * @access Private
  */
 const loginStatus = asyncHandler(async (req, res, next) => {
   res.status(httpStatus.OK).json(
-    new SuccessResponse(httpStatus.OK, 'Member login status', {
-      member: req.member,
+    new SuccessResponse(httpStatus.OK, 'User login status', {
+      user: req.user,
     })
   );
 });

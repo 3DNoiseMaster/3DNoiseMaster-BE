@@ -3,17 +3,17 @@ const bcrypt = require('bcryptjs');
 const sequelize = require('../../config/database');
 const { allRoles } = require('../../config/roles');
 
-class Member extends Model {
+class User extends Model {
   async isPasswordMatch(password) {
     return bcrypt.compare(password, this.password);
   }
 
-  static async findByMembername(membername) {
-    return this.findOne({ where: { membername } });
+  static async findByUsername(username) {
+    return this.findOne({ where: { username } });
   }
 }
 
-Member.init(
+User.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -26,13 +26,13 @@ Member.init(
       allowNull: false,
       unique: true,
     },
-    membername: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        notNull: { msg: 'Membername is required' },
-        isAlphanumeric: { msg: 'Membername must contain only letters and numbers' },
+        notNull: { msg: 'Username is required' },
+        isAlphanumeric: { msg: 'Username must contain only letters and numbers' },
       },
     },
     password: {
@@ -68,16 +68,17 @@ Member.init(
   },
   {
     sequelize,
-    modelName: 'Member',
+    modelName: 'User',
     hooks: {
-      beforeSave: async (member, options) => {
-        if (member.changed('password')) {
+      beforeSave: async (user, options) => {
+        if (user.changed('password')) {
           const salt = await bcrypt.genSalt(10);
-          member.password = await bcrypt.hash(member.password, salt);
+          user.password = await bcrypt.hash(user
+.password, salt);
         }
       },
     },
   }
 );
 
-module.exports = Member;
+module.exports = User;
