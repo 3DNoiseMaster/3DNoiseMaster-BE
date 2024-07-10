@@ -5,8 +5,9 @@ const { Sequelize } = require('sequelize');
 const config = require('../config/config');
 const logger = require('../config/logger');
 
-const sequelize = new Sequelize(config.database, config.membername, config.password, {
-  host: config.host,
+// Sequelize 연결 설정
+const sequelize = new Sequelize(config.database.name, config.database.user, config.database.password, {
+  host: config.database.host,
   dialect: 'mysql',
 });
 
