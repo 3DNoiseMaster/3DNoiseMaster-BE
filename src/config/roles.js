@@ -8,8 +8,8 @@ const allRoles = {
       alias: 'EDITOR',
       level: 200,
     },
-    MEMBER: {
-      alias: 'MEMBER',
+    USER: {
+      alias: 'USER',
       level: 100,
     },
   };

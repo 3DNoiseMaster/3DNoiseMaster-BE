@@ -1,24 +1,24 @@
-const getTasks = async (memberId) => {
-    // Implement logic to fetch tasks for the member
+const getTasks = async (userId) => {
+    // Implement logic to fetch tasks for the user
   };
   
-  const getTaskCount = async (memberId) => {
-    // Implement logic to count tasks for the member
+  const getTaskCount = async (userId) => {
+    // Implement logic to count tasks for the user
   };
   
-  const downloadTasks = async (memberId) => {
-    // Implement logic to download tasks for the member
+  const downloadTasks = async (userId) => {
+    // Implement logic to download tasks for the user
   };
   
-  const requestNoiseRemoval = async (memberId, data) => {
+  const requestNoiseRemoval = async (userId, data) => {
     // Implement logic to request noise removal
   };
   
-  const requestNoiseGeneration = async (memberId, data) => {
+  const requestNoiseGeneration = async (userId, data) => {
     // Implement logic to request noise generation
   };
   
-  const requestErrorComparison = async (memberId, data) => {
+  const requestErrorComparison = async (userId, data) => {
     // Implement logic to request error comparison
   };
   

@@ -1,3 +1,3 @@
 // Module exports
-module.exports.memberService = require('./memberService');
+module.exports.userService = require('./userService');
 module.exports.workspaceService = require('./workspaceService');

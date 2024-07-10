@@ -9,10 +9,10 @@ const { tokenTypes } = require('../../config/tokens');
  * Token Model
  */
 class Token extends Model {
-  static async findToken({ memberId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async findToken({ userId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.findOne({
       where: {
-        memberId,
+        userId,
         deviceId,
         type,
         blacklisted,
@@ -20,10 +20,10 @@ class Token extends Model {
     });
   }
 
-  static async deleteOneToken({ memberId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async deleteOneToken({ userId, deviceId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.destroy({
       where: {
-        memberId,
+        userId,
         deviceId,
         type,
         blacklisted,
@@ -31,10 +31,10 @@ class Token extends Model {
     });
   }
 
-  static async deleteManyToken({ memberId, type = tokenTypes.REFRESH, blacklisted = false }) {
+  static async deleteManyToken({ userId, type = tokenTypes.REFRESH, blacklisted = false }) {
     return this.destroy({
       where: {
-        memberId,
+        userId,
         type,
         blacklisted,
       },

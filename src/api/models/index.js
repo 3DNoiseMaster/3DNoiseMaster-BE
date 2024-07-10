@@ -1,3 +1,3 @@
 // Module exports
-module.exports.Member = require('./Member');
+module.exports.User = require('./User');
 module.exports.Token = require('./Token');
