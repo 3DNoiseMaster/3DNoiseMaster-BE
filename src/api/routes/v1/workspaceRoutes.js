@@ -11,6 +11,7 @@ router.use(passport.authenticate('jwt_access', { session: false }));
 router.get('/tasks', workspaceController.getTasks);
 router.get('/tasks/count', workspaceController.getTaskCount);
 router.get('/tasks/download', workspaceController.downloadTasks);
+router.delete('/tasks/delete', workspaceController.deleteTask);
 router.post('/request/noiseRem', workspaceController.requestNoiseRemoval);
 router.post('/request/noiseGen', workspaceController.requestNoiseGeneration);
 router.post('/request/errorComp', workspaceController.requestErrorComparison);

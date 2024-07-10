@@ -2,6 +2,7 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const Joi = require('joi');
+const { Sequelize } = require('sequelize');
 
 // init dotenv path
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
