@@ -15,7 +15,7 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').default('development'),
     APP_NAME: Joi.string().description('Application name'),
     DB_NAME: Joi.string().required().description('Database name'),
-    DB_MEMBER: Joi.string().required().description('Database username'),
+    DB_USER: Joi.string().required().description('Database username'),
     DB_PASS: Joi.string().required().description('Database password'),
     DB_HOST: Joi.string().required().description('Database host'),
     ADMIN_EMAIL: Joi.string().default('admin@example.com').description('Admin registration email'),
