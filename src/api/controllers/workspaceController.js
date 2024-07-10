@@ -35,6 +35,22 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc Delete a task
+ * @route DELETE /api/v1/workspace/tasks/delete
+ * @access Private
+ */
+const deleteTask = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.body;
+  const task = await workspaceService.getTaskById(taskId);
+  if (!task) {
+    return next(new ErrorResponse(404, 'Task not found'));
+  }
+  await workspaceService.deleteTask(taskId);
+  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, '작업물이 성공적으로 삭제되었습니다.'));
+});
+
+
+/**
  * @desc Request noise removal
  * @route POST /api/v1/workspace/request/noiseRem
  * @access Private
@@ -72,6 +88,7 @@ module.exports = {
   getTasks,
   getTaskCount,
   downloadTasks,
+  deleteTask,
   requestNoiseRemoval,
   requestNoiseGeneration,
   requestErrorComparison,
