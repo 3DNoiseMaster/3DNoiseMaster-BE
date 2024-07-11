@@ -1,9 +1,6 @@
-// Internal module imports
-const jwt = require('jsonwebtoken');
-const { SuccessResponse } = require('../utils');
+const { SuccessResponse, ErrorResponse } = require('../utils');
 const { asyncHandler } = require('../utils').common;
-const { userService } = require('../services');
-const { jwtSecret } = require('../../config/config'); // secret key를 config 파일에서 가져옵니다.
+const authService = require('../services/authService');
 const { httpStatus, httpMessage } = require('../../config/custom-http-status');
 
 /**
@@ -12,8 +9,8 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @access Public
  */
 const register = asyncHandler(async (req, res, next) => {
-  const { name, phoneNumber, userName, password } = req.body;
-  const newUser = await userService.createUser({ name, phoneNumber, userName, password });
+  const { id, phone, username, password } = req.body;
+  const newUser = await authService.registerUser({ id, phone, username, password });
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       user: newUser,
@@ -27,29 +24,16 @@ const register = asyncHandler(async (req, res, next) => {
  * @access Public
  */
 const login = asyncHandler(async (req, res, next) => {
-  const { userName, password } = req.body;
-  const user = await userService.loginUser(userName, password);
-  if (!user) {
-    return res.status(httpStatus.UNAUTHORIZED).json({ message: 'Invalid userName or password' });
+  const { id, password } = req.body;
+  const loginResult = await authService.loginUser(id, password);
+  if (!loginResult) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, 'Invalid username or password'));
   }
-  const payload = { sub: user.id, type: 'ACCESS' };
-  const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
-  res.status(httpStatus.OK).json({ message: 'User login', token });
-});
-
-/**
- * @desc Logout user
- * @route DELETE /api/v1/auth/logout
- * @access Private
- */
-const logout = asyncHandler(async (req, res, next) => {
-  req.logout(); // Passport.js 내장 함수 사용
-  res.status(httpStatus.NO_CONTENT).json(new SuccessResponse(httpStatus.NO_CONTENT));
+  res.status(httpStatus.OK).json({ message: 'User login', token: loginResult.token });
 });
 
 // Module exports
 module.exports = {
   register,
   login,
-  logout,
 };
