@@ -27,13 +27,36 @@ const login = asyncHandler(async (req, res, next) => {
   const { id, password } = req.body;
   const loginResult = await authService.loginUser(id, password);
   if (!loginResult) {
-    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, 'Invalid username or password'));
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidLogin']));
   }
-  res.status(httpStatus.OK).json({ message: 'User login', token: loginResult.token });
+  res.status(httpStatus.OK).json({ message: httpMessage['userLogged_in'], username: loginResult.user.username, token: loginResult.token });
 });
 
-// Module exports
+/**
+ * @desc Check login status
+ * @route GET /api/v1/auth/status
+ * @access Private
+ */
+const loginStatus = asyncHandler(async (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  if (!token) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['userNotLogged_in']));
+  }
+
+  const user = await authService.checkLoginStatus(token);
+  if (!user) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['userNotLogged_in']));
+  }
+
+  res.status(httpStatus.OK).json(
+    new SuccessResponse(httpStatus.OK, httpMessage['userLogged_in'], {
+      user,
+    })
+  );
+});
+
 module.exports = {
   register,
   login,
+  loginStatus,
 };

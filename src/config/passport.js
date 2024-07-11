@@ -48,7 +48,7 @@ jwtStrategy.ACCESS = new Strategy(
     try {
       // Check if the token type is 'ACCESS'
       if (jwtPayload.type === tokenTypes.ACCESS) {
-        const user = await User.findById(jwtPayload.sub);
+        const user = await User.findById(jwtPayload.id);
         if (user) {
           return done(null, user);
         }

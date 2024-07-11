@@ -3,8 +3,8 @@ const userService = require('./userService');
 const config = require('../../config/config'); // secret key를 config 파일에서 가져옵니다.
 
 const registerUser = async (userData) => {
-  const { name, phone, username, password } = userData;
-  const newUser = await userService.createUser({ name, phone, username, password });
+  const { id, phone, username, password } = userData;
+  const newUser = await userService.createUser({ id, phone, username, password });
   return newUser;
 };
 

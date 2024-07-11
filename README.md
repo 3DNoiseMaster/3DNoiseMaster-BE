@@ -12,7 +12,7 @@
    │  ├─ controllers
    │  │  ├─ authController.js
    │  │  ├─ index.js
-   │  │  ├─ memberController.js
+   │  │  ├─ userController.js
    │  │  └─ workspaceController.js
    │  ├─ lib
    │  │  └─ multer-uploader.js
@@ -26,19 +26,20 @@
    │  │  │  ├─ ignoreFavicon.js
    │  │  │  ├─ index.js
    │  │  │  └─ notFoundHandler.js
-   │  │  ├─ members
-   │  │  │  └─ threeDFileUpload.js
-   │  │  └─ permissions
-   │  │     ├─ grantAccess.js
-   │  │     ├─ index.js
-   │  │     └─ members.permission.js
+   │  │  ├─ permissions
+   │  │  │  ├─ grantAccess.js
+   │  │  │  ├─ index.js
+   │  │  │  └─ users.permission.js
+   │  │  └─ users
+   │  │     └─ threeDFileUpload.js
    │  ├─ models
    │  │  ├─ index.js
-   │  │  ├─ Member.js
-   │  │  └─ Token.js
+   │  │  ├─ Token.js
+   │  │  └─ User.js
    │  ├─ services
+   │  │  ├─ authService.js
    │  │  ├─ index.js
-   │  │  ├─ memberService.js
+   │  │  ├─ userService.js
    │  │  └─ workspaceService.js
    │  ├─ utils
    │  │  ├─ common.js
