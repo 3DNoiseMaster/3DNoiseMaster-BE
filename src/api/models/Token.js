@@ -1,3 +1,4 @@
+// JWT의 Develop을 위한 코드들
 // External module imports
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
