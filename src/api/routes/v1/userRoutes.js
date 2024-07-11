@@ -9,7 +9,6 @@ const router = express.Router();
 router.post('/signup', authController.register);
 router.post('/login', authController.login);
 router.get('/login/status', passport.authenticate('jwt_access', { session: false }), userController.loginStatus);
-router.delete('/logout', passport.authenticate('jwt_access', { session: false }), authController.logout);
 
 // Module exports
 module.exports = router;
