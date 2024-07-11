@@ -1,6 +1,7 @@
 // models/Task.js
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
+const { genUniqueId } = require('../utils/common')
 
 class Task extends Model {}
 
@@ -8,7 +9,7 @@ Task.init(
   {
     task_id: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: genUniqueId,
         allowNull: false,
         primaryKey: true,
         unique: true,
@@ -62,6 +63,9 @@ Task.init(
   {
     sequelize,
     modelName: 'Task',
+    freezeTableName: true,
+    tableName: 'user',
+    timestamps: false
   }
 );
 

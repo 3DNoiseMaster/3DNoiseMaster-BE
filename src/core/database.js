@@ -4,12 +4,7 @@ const { Sequelize } = require('sequelize');
 // Internal module imports
 const config = require('../config/config');
 const logger = require('../config/logger');
-
-// Sequelize 연결 설정
-const sequelize = new Sequelize(config.database.name, config.database.user, config.database.password, {
-  host: config.database.host,
-  dialect: 'mysql',
-});
+const sequelize = require('../config/database');
 
 /**
  * Connect to MySQL server

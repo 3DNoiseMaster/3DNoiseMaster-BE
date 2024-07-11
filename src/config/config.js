@@ -2,10 +2,9 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const Joi = require('joi');
-const { Sequelize } = require('sequelize');
 
 // init dotenv path
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env'), override: true });
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -41,26 +40,6 @@ const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' }
 if (error) {
   throw new Error(`Config Validation Error: ${error.message}`);
 }
-
-// Sequelize 연결 설정
-const sequelize = new Sequelize(envVars.DB_NAME, envVars.DB_USER, envVars.DB_PASS, {
-  host: envVars.DB_HOST,
-  dialect: 'mysql',
-  logging: envVars.NODE_ENV === 'development' ? console.log : false,
-});
-
-// 데이터베이스 연결 테스트
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection to the database has been established successfully.');
-
-    // 여기서부터 추가적인 데이터베이스 작업을 수행할 수 있습니다.
-
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-})();
 
 // Module exports
 module.exports = {

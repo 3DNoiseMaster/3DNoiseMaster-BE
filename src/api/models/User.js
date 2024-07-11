@@ -2,6 +2,7 @@ const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../../config/database');
 const { allRoles } = require('../../config/roles');
+const { genUniqueId } = require('../utils/common')
 
 class User extends Model {
   async isPasswordMatch(password) {
@@ -22,7 +23,7 @@ User.init(
     },
     user_id: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: genUniqueId,
       allowNull: false,
       unique: true,
     },
@@ -77,6 +78,9 @@ User.init(
   {
     sequelize,
     modelName: 'User',
+    freezeTableName: true,
+    tableName: 'user',
+    timestamps: false,
     hooks: {
       beforeSave: async (user, options) => {
         if (user.changed('password')) {

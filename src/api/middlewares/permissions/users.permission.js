@@ -17,7 +17,7 @@ const roleRights = new AccessControl();
  */
 const resourceTypes = {
   USER: {
-    alias: 'users',
+    alias: 'user',
     attributes: ['*'],
   },
 };

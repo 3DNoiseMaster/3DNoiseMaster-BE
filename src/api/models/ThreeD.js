@@ -70,6 +70,8 @@ ThreeD.init(
   {
     sequelize,
     modelName: 'ThreeD',
+    tableName: 'threed',
+    timestamps: false
   }
 );
 
