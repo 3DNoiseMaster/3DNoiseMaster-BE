@@ -1,4 +1,3 @@
-// External module imports
 const httpStatus = require('http-status');
 
 // define custom http messages
@@ -17,8 +16,9 @@ const httpMessage = {
   [httpStatus.INTERNAL_SERVER_ERROR]: 'The service is temporarily unavailable.',
   [httpStatus.SERVICE_UNAVAILABLE]: 'The service is currently unavailable.',
 
-  // error messages 추가 필요
-  
+  // custom messages
+  'InvalidLogin': 'Invalid username or password',
+  'userLogged_in': 'user log in',
 };
 
 // Module exports

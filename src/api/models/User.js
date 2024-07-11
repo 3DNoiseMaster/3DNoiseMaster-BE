@@ -2,6 +2,7 @@ const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../../config/database');
 const { allRoles } = require('../../config/roles');
+const { genUniqueId } = require('../utils/common')
 
 class User extends Model {
   async isPasswordMatch(password) {
@@ -20,13 +21,13 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    uuid: {
+    user_id: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: genUniqueId,
       allowNull: false,
       unique: true,
     },
-    username: {
+    user_name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -46,14 +47,6 @@ User.init(
         },
       },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'Name is required' },
-        isAlpha: { msg: 'Name must only contain letters' },
-      },
-    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -65,16 +58,34 @@ User.init(
         },
       },
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: allRoles.USER.alias,
+      validate: {
+        isIn: {
+          args: [Object.values(allRoles).map(role => role.alias)],
+          msg: 'Invalid role',
+        },
+      },
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
     modelName: 'User',
+    freezeTableName: true,
+    tableName: 'user',
+    timestamps: false,
     hooks: {
       beforeSave: async (user, options) => {
         if (user.changed('password')) {
           const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user
-.password, salt);
+          user.password = await bcrypt.hash(user.password, salt);
         }
       },
     },
