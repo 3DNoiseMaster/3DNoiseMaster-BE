@@ -19,7 +19,6 @@ const httpMessage = {
   // custom messages
   'InvalidLogin': 'Invalid username or password',
   'userLogged_in': 'user log in',
-  'userNotLogged_in': 'Bad Request or Not logged',
 };
 
 // Module exports

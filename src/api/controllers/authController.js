@@ -44,10 +44,6 @@ const loginStatus = asyncHandler(async (req, res, next) => {
   }
 
   const user = await authService.checkLoginStatus(token);
-  if (!user) {
-    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['userNotLogged_in']));
-  }
-
   res.status(httpStatus.OK).json(
     new SuccessResponse(httpStatus.OK, httpMessage['userLogged_in'], {
       user,
