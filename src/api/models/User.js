@@ -20,13 +20,13 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    mid: {
+    user_id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
     },
-    username: {
+    user_name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
