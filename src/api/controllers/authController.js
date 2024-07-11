@@ -9,8 +9,8 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @access Public
  */
 const register = asyncHandler(async (req, res, next) => {
-  const { id, phone, username, password } = req.body;
-  const newUser = await authService.registerUser({ id, phone, username, password });
+  const { id, phone, user_name, password } = req.body;
+  const newUser = await authService.registerUser({ id, phone, user_name, password });
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       user: newUser,
@@ -29,7 +29,7 @@ const login = asyncHandler(async (req, res, next) => {
   if (!loginResult) {
     return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidLogin']));
   }
-  res.status(httpStatus.OK).json({ message: httpMessage['userLogged_in'], username: loginResult.user.username, token: loginResult.token });
+  res.status(httpStatus.OK).json({ message: httpMessage['userLogged_in'], user_name: loginResult.user.user_name, token: loginResult.token });
 });
 
 /**
