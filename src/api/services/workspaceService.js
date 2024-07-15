@@ -1,3 +1,5 @@
+const { Task, ThreeD, Noise } = require('../models');
+
 const getTasks = async (memberId) => {
   // Implement logic to fetch tasks for the member
 };
@@ -25,16 +27,58 @@ const deleteTask = async (taskId) => {
   // }
 };
 
-const requestNoiseRemoval = async (memberId, data) => {
-  // Implement logic to request noise removal
+const requestNoiseRemoval = async (user_id, data) => {
+  const task = await Task.create({
+    task_name: data.task_name,
+    division: 'noise_rem',
+    user_id: memberId,
+  });
+  const threeD = await ThreeD.create({
+    task_file: data.file,
+    task_id: task.task_id,
+    user_id: user_id,
+  });
+  console.log(`Noise removal requested by member ${userId} for task ${task.task_id}`);
+
+  return task;
 };
 
-const requestNoiseGeneration = async (memberId, data) => {
-  // Implement logic to request noise generation
+const requestNoiseGeneration = async (userId, data) => {
+  const task = await Task.create({
+    task_name: data.task_name,
+    division: 'noise_gen',
+    user_id: memberId,
+  });
+  const threeD = await ThreeD.create({
+    task_file: data.file,
+    task_id: task.task_id,
+    user_id: user_id,
+  });
+  const noise = await Noise.create({
+    task_id: task.task_id,
+    noise_type: data.noiseType,
+    noise_level: data.noiseLevel,
+  })
+  console.log(`Noise generate requested by member ${userId} for task ${task.task_id}`);
+
+  return task;
 };
 
-const requestErrorComparison = async (memberId, data) => {
-  // Implement logic to request error comparison
+const requestErrorComparison = async (userId, data) => {
+  const task = await Task.create({
+    task_name: data.task_name,
+    division: 'error_comp',
+    user_id: memberId,
+  });
+  const threeD = await ThreeD.create({
+    task_file: data.file1,
+    result_file: data.file2,
+    task_id: task.task_id,
+    user_id: user_id,
+  });
+  console.log(`Error comp requested by member ${userId} for task ${task.task_id}`);
+
+  return task;
 };
 
 module.exports = {
