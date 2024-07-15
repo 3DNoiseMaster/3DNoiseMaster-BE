@@ -38,15 +38,13 @@ const login = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const loginStatus = asyncHandler(async (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
-  if (!token) {
+  if (!req.user) {
     return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['userNotLogged_in']));
   }
 
-  const user = await authService.checkLoginStatus(token);
   res.status(httpStatus.OK).json(
     new SuccessResponse(httpStatus.OK, httpMessage['userLogged_in'], {
-      user,
+      user: req.user,
     })
   );
 });

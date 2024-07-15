@@ -32,7 +32,6 @@ verifyCallback.ACCESS = (req, resolve, reject) => {
  * Authentications
  */
 const authorizeAccessToken = (req, res, next) => {
-  console.log("Authorization header:", req.headers.authorization); // 토큰요청 확인 로그
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt_access', { session: config.jwt.session }, verifyCallback.ACCESS(req, resolve, reject))(req, res, next);
   })
