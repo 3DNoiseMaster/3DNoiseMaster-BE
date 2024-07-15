@@ -2,7 +2,7 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
 
 // Internal module imports
-const { User } = require('../api/models'); // User 모델을 가져옵니다.
+const { User } = require('../api/models');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
 

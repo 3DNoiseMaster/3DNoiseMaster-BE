@@ -13,8 +13,8 @@ const loginUser = async (id, password) => {
   if (!user) {
     return null;
   }
-  const payload = { sub: user.id, type: 'ACCESS' };
-  const token = jwt.sign(payload, config.jwt.secret, { expiresIn: '1h' });
+  const payload = { id: user.user_id, type: 'ACCESS' };
+  const token = jwt.sign(payload, config.jwt.secret, { expiresIn: '1h', issuer: '3DNoiseMaster' });
   return { user, token };
 };
 
