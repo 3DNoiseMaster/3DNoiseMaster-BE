@@ -1,7 +1,7 @@
 // models/Task.js
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
-const { genUniqueId } = require('../utils/common')
+const { genUniqueId } = require('../utils/common');
 
 class Task extends Model {}
 
@@ -26,11 +26,15 @@ Task.init(
       },
     },
     division: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ['noise_gen', 'noise_rem', 'error_comp'],
       allowNull: false,
       validate: {
         notNull: { msg: 'Division is required' },
-        isAlpha: { msg: 'Division must only contain letters' },
+        isIn: {
+          args: [['noise_gen', 'noise_rem', 'error_comp']],
+          msg: 'Division must be one of: noise_gen, noise_rem, error_comp',
+        },
       },
     },
     status: {
@@ -38,21 +42,21 @@ Task.init(
       allowNull: false,
       defaultValue: 0,
       validate: {
-        notNull: { msg: 'User ID is required' },
-        isInt: { msg: 'User ID must be an integer' },
+        notNull: { msg: 'status is required' },
+        isInt: { msg: 'status must be an integer' },
       },
     },
     date: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'User',
-        key: 'id',
+        model: 'user',
+        key: 'user_id',
       },
       validate: {
         notNull: { msg: 'User ID is required' },
@@ -64,7 +68,7 @@ Task.init(
     sequelize,
     modelName: 'Task',
     freezeTableName: true,
-    tableName: 'user',
+    tableName: 'task',
     timestamps: false
   }
 );
