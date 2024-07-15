@@ -62,11 +62,13 @@ module.exports = {
     refreshSecret: envVars.JWT_REFRESH_SECRET,
     resetPasswordSecret: envVars.JWT_RESET_PASSWORD_SECRET,
     verifyEmailSecret: envVars.JWT_VERIFY_EMAIL_SECRET,
+    algorithm: 'HS384',
     session: envVars.JWT_SESSION,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     cookieExpirationDays: envVars.JWT_COOKIE_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+    secret: envVars.JWT_ACCESS_SECRET
   },
 };
