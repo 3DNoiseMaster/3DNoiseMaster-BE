@@ -9,6 +9,7 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @route GET /api/v1/workspace/tasks
  * @access Private
  */
+// 차후 양이 많아질 것을 대비해 Page로 나누어야할것
 const getTasks = asyncHandler(async (req, res, next) => {
   const tasks = await workspaceService.getTasks(req.user.id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
@@ -58,7 +59,12 @@ const deleteTask = asyncHandler(async (req, res, next) => {
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
   const data = req.body;
   const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 제거 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -69,7 +75,12 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
   const data = req.body;
   const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 생성 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -80,7 +91,12 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
   const data = req.body;
   const result = await workspaceService.requestErrorComparison(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "오차율 비교 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 // Module exports
