@@ -8,8 +8,8 @@ const registerUser = async (userData) => {
   return newUser;
 };
 
-const loginUser = async (user_name, password) => {
-  const user = await userService.loginUser(user_name, password);
+const loginUser = async (id, password) => {
+  const user = await userService.loginUser(id, password);
   if (!user) {
     return null;
   }

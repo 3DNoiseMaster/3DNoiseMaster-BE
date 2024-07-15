@@ -60,7 +60,6 @@ jwtStrategy.ACCESS = new Strategy(
     }
   }
 );
-
 // Module exports
 module.exports = (passport) => {
   passport.use('jwt_access', jwtStrategy.ACCESS);
