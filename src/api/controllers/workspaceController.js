@@ -1,5 +1,5 @@
 // Internal module imports
-const { SuccessResponse } = require('../utils');
+const { SuccessResponse, ErrorResponse } = require('../utils');
 const { asyncHandler } = require('../utils').common;
 const { workspaceService } = require('../services');
 const { httpStatus, httpMessage } = require('../../config/custom-http-status');
@@ -9,6 +9,7 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @route GET /api/v1/workspace/tasks
  * @access Private
  */
+// 차후 양이 많아질 것을 대비해 Page로 나누어야할것
 const getTasks = asyncHandler(async (req, res, next) => {
   const tasks = await workspaceService.getTasks(req.user.id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
@@ -30,8 +31,16 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.downloadTasks(req.user.id);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
+  const { user } = req;
+  const { task_id } = req.body;
+  const threed = await workspaceService.downloadTasks(user.user_id, task_id);
+  const taskName = await workspaceService.getTaskNameById(user.user_id, task_id);
+  if (!threed || !taskName) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidFileRequest']));
+  }
+  res.setHeader('Content-Disposition', `attachment; filename=${taskName}_result.obj`);
+  res.setHeader('Content-Type', 'application/x-obj');
+  res.send(threed);
 });
 
 /**
@@ -40,12 +49,12 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const deleteTask = asyncHandler(async (req, res, next) => {
-  const { taskId } = req.body;
-  const task = await workspaceService.getTaskById(taskId);
-  if (!task) {
-    return next(new ErrorResponse(404, 'Task not found'));
+  const { user } = req;
+  const { task_id } = req.body;
+  const result = await workspaceService.deleteTask(user.user_id, task_id);
+  if (result.status == 404) {
+    return next(new ErrorResponse(httpStatus.NOT_FOUND, httpMessage[httpStatus.NOT_FOUND]));
   }
-  await workspaceService.deleteTask(taskId);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, '작업물이 성공적으로 삭제되었습니다.'));
 });
 
@@ -57,8 +66,13 @@ const deleteTask = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const result = await workspaceService.requestNoiseRemoval(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 제거 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -68,8 +82,13 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const result = await workspaceService.requestNoiseGeneration(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 생성 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -79,8 +98,13 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestErrorComparison(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const result = await workspaceService.requestErrorComparison(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "오차율 비교 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 // Module exports

@@ -2,11 +2,12 @@
 const express = require('express');
 const passport = require('passport');
 const workspaceController = require('../../controllers/workspaceController');
+const { authorizeAccessToken } = require('../../middlewares/authentication/auth');
 
 const router = express.Router();
 
 // Protect all routes under workspace with JWT authentication
-router.use(passport.authenticate('jwt_access', { session: false }));
+router.use(authorizeAccessToken);
 
 router.get('/tasks', workspaceController.getTasks);
 router.get('/tasks/count', workspaceController.getTaskCount);

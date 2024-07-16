@@ -19,6 +19,8 @@ const httpMessage = {
   // custom messages
   'InvalidLogin': 'Invalid username or password',
   'userLogged_in': 'user log in',
+  'InvalidFileRequest': 'Invalid File Request',
+  'InvalidDeleteRequest': 'Invalid Delete Request',
 };
 
 // Module exports

@@ -2,68 +2,51 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
 
-class ThreeD extends Model {}
+class ThreeD extends Model {
+  static async findByTaskId(id) {
+    return this.findOne({ where: { task_id : id } });
+  }
+}
 
 ThreeD.init(
   {
-    threed_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+    task_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
       primaryKey: true,
+      references: {
+        model: 'task',
+        key: 'task_id',
+      },
     },
     task_file: {
-      type: DataTypes.STRING,
+      type: DataTypes.BLOB,
       allowNull: false,
       validate: {
         notNull: { msg: 'Task file is required' },
-        len: {
-          args: [1, 100],
-          msg: 'Task file must be between 1 and 100 characters long',
-        },
       },
     },
-    result: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'Result is required' },
-        len: {
-          args: [1, 100],
-          msg: 'Result must be between 1 and 100 characters long',
-        },
-      },
+    result_file: {
+      type: DataTypes.BLOB,
+      allowNull: true,
     },
     error_rate: {
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
       defaultValue: 0,
       validate: {
-        notNull: { msg: 'Error rate is required' },
         isDecimal: { msg: 'Error rate must be a decimal value' },
       },
     },
-    task_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Task',
-        key: 'task_id',
-      },
-      validate: {
-        notNull: { msg: 'Task ID is required' },
-        isUUID: 4,
-      },
-    },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'User',
-        key: 'id',
+        model: 'user',
+        key: 'user_id',
       },
       validate: {
         notNull: { msg: 'User ID is required' },
-        isInt: { msg: 'User ID must be an integer' },
       },
     },
   },

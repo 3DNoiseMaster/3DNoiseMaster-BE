@@ -9,8 +9,8 @@ class User extends Model {
     return bcrypt.compare(password, this.password);
   }
 
-  static async findByUsername(username) {
-    return this.findOne({ where: { username } });
+  static async findById(id) {
+    return this.findOne({ where: { user_id : id } });
   }
 }
 
