@@ -1,7 +1,11 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
 
-class Noise extends Model {}
+class Noise extends Model {
+  static async findByTaskId(id) {
+    return this.findOne({ where: { task_id : id } });
+  }
+}
 
 Noise.init(
   {
