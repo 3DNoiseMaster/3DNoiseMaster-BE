@@ -11,7 +11,7 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  */
 // 차후 양이 많아질 것을 대비해 Page로 나누어야할것
 const getTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.getTasks(req.user.id);
+  const tasks = await workspaceService.getTasks(req.user.user_id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
 });
 
@@ -21,7 +21,7 @@ const getTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const getTaskCount = asyncHandler(async (req, res, next) => {
-  const count = await workspaceService.getTaskCount(req.user.id);
+  const count = await workspaceService.getTaskCount(req.user.user_id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { count }));
 });
 

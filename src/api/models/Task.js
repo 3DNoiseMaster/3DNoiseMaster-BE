@@ -7,6 +7,13 @@ class Task extends Model {
   static async findByTaskId(id) {
     return this.findOne({ where: { task_id : id } });
   }
+
+  static async findAll(id, attributes){
+    return this.findAll({ 
+      where : { user_id : id },
+      attributes: attributes
+    });
+  }
 }
 
 Task.init(
