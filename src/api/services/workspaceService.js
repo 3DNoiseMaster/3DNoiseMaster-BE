@@ -33,43 +33,34 @@ const getTaskNameById = async (user_id, task_id) => {
 // 작업물 삭제
 const deleteTask = async (user_id, task_id) => {
   const task = await Task.findByTaskId(task_id);
-  const threed = await ThreeD.findByTaskId(task_id);
-  if (task.division == 'noise_rem') {
-    const noise = await Noise.findByTaskId(task_id);
-    if (!task || !threed || !noise) {
-      return { status: 404 };
-    }
-    await noise.destroy();
-  }
-  if (!task || !threed) {
+  if (!task) {
     return { status: 404 };
   }
-  await task.destroy();
-  await threed.destroy();
+  task.destroy();
   return { status: 200 };
 };
 
 const requestNoiseRemoval = async (user_id, data) => {
+  // validator 코드 넣으면 좋을듯
   const task = await Task.create({
     task_name: data.task_name,
-    division: 'noise_rem',
-    user_id: memberId,
+    task_division: 'noise_rem',
+    user_id: user_id,
   });
   const threeD = await ThreeD.create({
     task_file: data.file,
     task_id: task.task_id,
     user_id: user_id,
   });
-  console.log(`Noise removal requested by member ${userId} for task ${task.task_id}`);
 
   return task;
 };
 
-const requestNoiseGeneration = async (userId, data) => {
+const requestNoiseGeneration = async (user_id, data) => {
   const task = await Task.create({
     task_name: data.task_name,
-    division: 'noise_gen',
-    user_id: memberId,
+    task_division: 'noise_gen',
+    user_id: user_id,
   });
   const threeD = await ThreeD.create({
     task_file: data.file,
@@ -81,16 +72,16 @@ const requestNoiseGeneration = async (userId, data) => {
     noise_type: data.noiseType,
     noise_level: data.noiseLevel,
   })
-  console.log(`Noise generate requested by member ${userId} for task ${task.task_id}`);
+  console.log(`Noise generate requested by user ${user_id} for task ${task.task_id}`);
 
   return task;
 };
 
-const requestErrorComparison = async (userId, data) => {
+const requestErrorComparison = async (user_id, data) => {
   const task = await Task.create({
     task_name: data.task_name,
-    division: 'error_comp',
-    user_id: memberId,
+    task_division: 'error_comp',
+    user_id: user_id,
   });
   const threeD = await ThreeD.create({
     task_file: data.file1,
@@ -98,7 +89,7 @@ const requestErrorComparison = async (userId, data) => {
     task_id: task.task_id,
     user_id: user_id,
   });
-  console.log(`Error comp requested by member ${userId} for task ${task.task_id}`);
+  console.log(`Error comp requested by user ${user_id} for task ${task.task_id}`);
 
   return task;
 };

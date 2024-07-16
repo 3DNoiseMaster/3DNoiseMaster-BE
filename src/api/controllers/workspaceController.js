@@ -31,7 +31,8 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
-  const { task_id, user } = req.body;
+  const { user } = req;
+  const { task_id } = req.body;
   const threed = await workspaceService.downloadTasks(user.user_id, task_id);
   const taskName = await workspaceService.getTaskNameById(user.user_id, task_id);
   if (!threed || !taskName) {
@@ -48,7 +49,8 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const deleteTask = asyncHandler(async (req, res, next) => {
-  const { task_id, user } = req.body;
+  const { user } = req;
+  const { task_id } = req.body;
   const result = await workspaceService.deleteTask(user.user_id, task_id);
   if (result.status == 404) {
     return next(new ErrorResponse(httpStatus.NOT_FOUND, httpMessage[httpStatus.NOT_FOUND]));
@@ -64,7 +66,7 @@ const deleteTask = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
+  const result = await workspaceService.requestNoiseRemoval(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "잡음 제거 요청이 성공적으로 처리되었습니다.",
@@ -80,7 +82,7 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
+  const result = await workspaceService.requestNoiseGeneration(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "잡음 생성 요청이 성공적으로 처리되었습니다.",
@@ -96,7 +98,7 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestErrorComparison(req.user.id, data);
+  const result = await workspaceService.requestErrorComparison(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "오차율 비교 요청이 성공적으로 처리되었습니다.",
