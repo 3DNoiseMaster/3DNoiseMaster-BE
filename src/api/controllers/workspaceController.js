@@ -58,7 +58,7 @@ const deleteTask = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
+  const result = await workspaceService.requestNoiseRemoval(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "잡음 제거 요청이 성공적으로 처리되었습니다.",
@@ -74,7 +74,7 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
+  const result = await workspaceService.requestNoiseGeneration(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "잡음 생성 요청이 성공적으로 처리되었습니다.",
@@ -90,7 +90,7 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
   const data = req.body;
-  const result = await workspaceService.requestErrorComparison(req.user.id, data);
+  const result = await workspaceService.requestErrorComparison(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
       message : "오차율 비교 요청이 성공적으로 처리되었습니다.",

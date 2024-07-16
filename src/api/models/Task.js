@@ -25,7 +25,7 @@ Task.init(
         },
       },
     },
-    division: {
+    task_division: {
       type: DataTypes.ENUM,
       values: ['noise_gen', 'noise_rem', 'error_comp'],
       allowNull: false,
@@ -60,7 +60,6 @@ Task.init(
       },
       validate: {
         notNull: { msg: 'User ID is required' },
-        isInt: { msg: 'User ID must be an integer' },
       },
     },
   },
