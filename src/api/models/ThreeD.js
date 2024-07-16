@@ -2,7 +2,11 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
 
-class ThreeD extends Model {}
+class ThreeD extends Model {
+  static async findByTaskId(id) {
+    return this.findOne({ where: { task_id : id } });
+  }
+}
 
 ThreeD.init(
   {

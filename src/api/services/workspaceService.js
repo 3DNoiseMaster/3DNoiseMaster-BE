@@ -1,30 +1,52 @@
 const { Task, ThreeD, Noise } = require('../models');
 
-const getTasks = async (memberId) => {
+const getTasks = async (user_id) => {
   // Implement logic to fetch tasks for the member
 };
 
-const getTaskCount = async (memberId) => {
+const getTaskCount = async (user_id) => {
   // Implement logic to count tasks for the member
 };
 
-const downloadTasks = async (memberId) => {
-  // Implement logic to download tasks for the member
+const downloadTasks = async (user_id, task_id) => {
+  const threed = await ThreeD.findByTaskId(task_id);
+  if (!threed) {
+    return null;
+  }
+  if (threed.user_id !== user_id) {
+    return null;
+  }
+  return threed.result_file;
 };
 
-// 작업물 ID로 작업물 가져오기
-const getTaskById = async (taskId) => {
-  // Implement logic to getTask by Id
-  // return Workspace.findByPk(taskId);
+const getTaskNameById = async (user_id, task_id) => {
+  const task = await Task.findByTaskId(task_id);
+  if (!task) {
+    return null;
+  }
+  if (task.user_id !== user_id) {
+    return null;
+  }
+  return task.task_name;
 };
 
 // 작업물 삭제
-const deleteTask = async (taskId) => {
-  // Implement logic to deleteTask
-  // const task = await Workspace.findByPk(taskId);
-  // if (task) {
-  //   await task.destroy();
-  // }
+const deleteTask = async (user_id, task_id) => {
+  const task = await Task.findByTaskId(task_id);
+  const threed = await ThreeD.findByTaskId(task_id);
+  if (task.division == 'noise_rem') {
+    const noise = await Noise.findByTaskId(task_id);
+    if (!task || !threed || !noise) {
+      return { status: 404 };
+    }
+    await noise.destroy();
+  }
+  if (!task || !threed) {
+    return { status: 404 };
+  }
+  await task.destroy();
+  await threed.destroy();
+  return { status: 200 };
 };
 
 const requestNoiseRemoval = async (user_id, data) => {
@@ -85,7 +107,7 @@ module.exports = {
   getTasks,
   getTaskCount,
   downloadTasks,
-  getTaskById,
+  getTaskNameById,
   deleteTask,
   requestNoiseRemoval,
   requestNoiseGeneration,

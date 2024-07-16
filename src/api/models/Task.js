@@ -3,7 +3,11 @@ const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../config/database');
 const { genUniqueId } = require('../utils/common');
 
-class Task extends Model {}
+class Task extends Model {
+  static async findByTaskId(id) {
+    return this.findOne({ where: { task_id : id } });
+  }
+}
 
 Task.init(
   {
