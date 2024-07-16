@@ -31,7 +31,8 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
-  const { task_id, user } = req.body;
+  const { user } = req;
+  const { task_id } = req.body;
   const threed = await workspaceService.downloadTasks(user.user_id, task_id);
   const taskName = await workspaceService.getTaskNameById(user.user_id, task_id);
   if (!threed || !taskName) {
@@ -48,7 +49,8 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const deleteTask = asyncHandler(async (req, res, next) => {
-  const { task_id, user } = req.body;
+  const { user } = req;
+  const { task_id } = req.body;
   const result = await workspaceService.deleteTask(user.user_id, task_id);
   if (result.status == 404) {
     return next(new ErrorResponse(httpStatus.NOT_FOUND, httpMessage[httpStatus.NOT_FOUND]));

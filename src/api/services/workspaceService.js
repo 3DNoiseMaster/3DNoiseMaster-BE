@@ -33,19 +33,10 @@ const getTaskNameById = async (user_id, task_id) => {
 // 작업물 삭제
 const deleteTask = async (user_id, task_id) => {
   const task = await Task.findByTaskId(task_id);
-  const threed = await ThreeD.findByTaskId(task_id);
-  if (task.division == 'noise_rem') {
-    const noise = await Noise.findByTaskId(task_id);
-    if (!task || !threed || !noise) {
-      return { status: 404 };
-    }
-    await noise.destroy();
-  }
-  if (!task || !threed) {
+  if (!task) {
     return { status: 404 };
   }
-  await task.destroy();
-  await threed.destroy();
+  task.destroy();
   return { status: 200 };
 };
 
