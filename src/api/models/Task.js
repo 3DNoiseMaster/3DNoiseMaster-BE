@@ -1,17 +1,26 @@
-// models/Task.js
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes, Op, Model } = require('sequelize');
 const sequelize = require('../../config/database');
 const { genUniqueId } = require('../utils/common');
 
 class Task extends Model {
   static async findByTaskId(id) {
-    return this.findOne({ where: { task_id : id } });
+    return this.findOne({ where: { task_id: id } });
   }
 
-  static async findAll(id, attributes){
-    return this.findAll({ 
-      where : { user_id : id },
-      attributes: attributes
+  static async findAllTasks(userId, attributes) {
+    return this.findAll({
+      where: { user_id: userId },
+      attributes: attributes,
+    });
+  }
+
+  static async findUnprocessedOldest() {
+    return this.findOne({
+      where: {
+        status: {
+          [Op.lt]: 100,
+        },
+      },
     });
   }
 }
@@ -19,11 +28,11 @@ class Task extends Model {
 Task.init(
   {
     task_id: {
-        type: DataTypes.UUID,
-        defaultValue: genUniqueId,
-        allowNull: false,
-        primaryKey: true,
-        unique: true,
+      type: DataTypes.UUID,
+      defaultValue: genUniqueId,
+      allowNull: false,
+      primaryKey: true,
+      unique: true,
     },
     task_name: {
       type: DataTypes.STRING,
@@ -37,8 +46,7 @@ Task.init(
       },
     },
     task_division: {
-      type: DataTypes.ENUM,
-      values: ['noise_gen', 'noise_rem', 'error_comp'],
+      type: DataTypes.ENUM('noise_gen', 'noise_rem', 'error_comp'),
       allowNull: false,
       validate: {
         notNull: { msg: 'Division is required' },
@@ -53,8 +61,8 @@ Task.init(
       allowNull: false,
       defaultValue: 0,
       validate: {
-        notNull: { msg: 'status is required' },
-        isInt: { msg: 'status must be an integer' },
+        notNull: { msg: 'Status is required' },
+        isInt: { msg: 'Status must be an integer' },
       },
     },
     date: {
@@ -65,10 +73,6 @@ Task.init(
     user_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: {
-        model: 'user',
-        key: 'user_id',
-      },
       validate: {
         notNull: { msg: 'User ID is required' },
       },
@@ -79,7 +83,7 @@ Task.init(
     modelName: 'Task',
     freezeTableName: true,
     tableName: 'task',
-    timestamps: false
+    timestamps: false,
   }
 );
 
