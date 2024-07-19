@@ -10,17 +10,17 @@ const Token = require('./Token');
 User.hasMany(Task, { foreignKey: 'user_id' });
 Task.belongsTo(User, { foreignKey: 'user_id' });
 
-// Task와 ThreeD 관계 설정 (1:N)
-Task.hasMany(ThreeD, { foreignKey: 'task_id' });
+// Task와 ThreeD 관계 설정 (1:1)
+Task.hasOne(ThreeD, { foreignKey: 'task_id' });
 ThreeD.belongsTo(Task, { foreignKey: 'task_id' });
 
 // User와 ThreeD 관계 설정 (1:N)
 User.hasMany(ThreeD, { foreignKey: 'user_id' });
 ThreeD.belongsTo(User, { foreignKey: 'user_id' });
 
-// Noise와 Task 관계 설정 (1:N)
-Noise.hasMany(Task, { foreignKey: 'task_id' });
-Noise.belongsTo(User, { foreignKey: 'task_id' });
+// Task와 Noise 관계 설정 (1:1)
+Task.hasOne(Noise, { foreignKey: 'task_id' });
+Noise.belongsTo(Task, { foreignKey: 'task_id' });
 
 // 기존의 Token 모델과 새로운 모델들을 포함하여 내보내기
 module.exports = {

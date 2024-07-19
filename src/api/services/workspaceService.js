@@ -1,12 +1,12 @@
 const { Task, ThreeD, Noise } = require('../models');
 
   const getTasks = async (user_id) => {
-    const tasks = await Task.findAll(user_id, ['task_id', 'task_name', 'status', 'date']);
+    const tasks = await Task.findAllTasks(user_id, ['task_id', 'task_name', 'status', 'date']);
     return tasks;
   };
 
   const getTaskCount = async (user_id) => {
-    const tasks = await Task.findAll(user_id, ['status']);
+    const tasks = await Task.findAllTasks(user_id, ['status']);
   
     let beforeCount = 0;
     let doneCount = 0;
