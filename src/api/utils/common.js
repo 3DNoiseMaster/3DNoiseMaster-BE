@@ -1,5 +1,6 @@
 // External module imports
 const { v4: uuidv4 } = require('uuid');
+const iconv = require('iconv-lite');
 
 // Internal module imports
 const config = require('../../config/config');
@@ -66,6 +67,9 @@ const genUniqueId = () => uuidv4();
 const getFullUrl = (req) =>
   `${req.protocol}://${req.hostname}:${config.port}${req.baseUrl}`;
 
+const decodeUTF_8 = (data) =>
+  iconv.decode(data, 'utf-8');
+
 // Module exports
 module.exports = {
   asyncHandler,
@@ -76,4 +80,5 @@ module.exports = {
   queryStringify,
   genUniqueId,
   getFullUrl,
+  decodeUTF_8,
 };
