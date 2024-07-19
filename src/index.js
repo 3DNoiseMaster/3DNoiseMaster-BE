@@ -7,11 +7,11 @@ const init = async () => {
   // database connection
   await connectDB();
 
-  // start the server
-  await startServer();
-
   // start the workers
   await startWorkers();
+
+  // start the server
+  await startServer();
 };
 
 /**
