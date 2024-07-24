@@ -33,11 +33,12 @@ const upload = (folder = '/tmp', allowedMimeTypes = [], maxFileSize = 1048576) =
   const storage = memoryStorage(); // 메모리 저장소 사용
   const limits = { fileSize: maxFileSize };
   const fileFilter = (req, file, cb) => {
+
     let errorMessage = null;
     if (allowedMimeTypes.length === 0) {
       return cb(null, false);
     }
-    const isFileAllowed = allowedMimeTypes.every(
+    const isFileAllowed = allowedMimeTypes.some(
       (allowedMimeType) => allowedMimeType.field === file.fieldname && allowedMimeType.types.includes(file.mimetype)
     );
     if (isFileAllowed) {

@@ -10,7 +10,7 @@ const singleFileUpload = (req, res, next) => {
     allowedMimeTypes: [
       {
         field: fieldName,
-        types: ['model/obj'], // OBJ 파일 MIME 타입
+        types: ['application/octet-stream', 'model/obj'], // OBJ 파일 MIME 타입
         message: 'Only .obj format allowed!',
       },
     ],
@@ -29,12 +29,12 @@ const multipleFileUpload = (req, res, next) => {
     allowedMimeTypes: [
       {
         field: 'file1',
-        types: ['model/obj'], // OBJ 파일 MIME 타입
+        types: ['application/octet-stream', 'model/obj'], // OBJ 파일 MIME 타입
         message: 'Only .obj format allowed for file1!',
       },
       {
         field: 'file2',
-        types: ['model/obj'], // OBJ 파일 MIME 타입
+        types: ['application/octet-stream', 'model/obj'], // OBJ 파일 MIME 타입
         message: 'Only .obj format allowed for file2!',
       },
     ],
