@@ -39,7 +39,8 @@ const downloadTasks = async (user_id, task_id) => {
   if (threed.user_id !== user_id) {
     return null;
   }
-  return threed.result_file;
+  //return threed.result_file;
+  return threed.task_file;
 };
 
 const getTaskNameById = async (user_id, task_id) => {
@@ -72,10 +73,10 @@ const requestNoiseRemoval = async (user_id, data) => {
     task_division: 'noise_rem',
     user_id: user_id,
   });
-  const threeD = await ThreeD.create({
+  await ThreeD.create({
     task_file: data.file,
     task_id: task.task_id,
-    user_id: user_id,
+    user_id: user_id, 
   });
 
   return task;
@@ -87,14 +88,12 @@ const requestNoiseGeneration = async (user_id, data) => {
     task_division: 'noise_gen',
     user_id: user_id,
   });
-  
-  const threeD = await ThreeD.create({
+  await ThreeD.create({
     task_file: data.file, 
     task_id: task.task_id,
     user_id: user_id,
   });
-  
-  const noise = await Noise.create({
+  await Noise.create({
     task_id: task.task_id,
     noise_type: data.noiseType,
     noise_level: data.noiseLevel,
@@ -111,7 +110,7 @@ const requestErrorComparison = async (user_id, data) => {
     task_division: 'error_comp',
     user_id: user_id,
   });
-  const threeD = await ThreeD.create({
+  await ThreeD.create({
     task_file: data.file1,
     result_file: data.file2,
     task_id: task.task_id,
