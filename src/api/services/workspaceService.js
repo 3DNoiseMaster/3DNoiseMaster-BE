@@ -59,9 +59,11 @@ const deleteTask = async (user_id, task_id) => {
   if (!task) {
     return { status: 404 };
   }
-  task.destroy();
+  
+  await task.destroy();
   return { status: 200 };
 };
+
 
 const requestNoiseRemoval = async (user_id, data) => {
   // validator 코드 넣으면 좋을듯
@@ -87,7 +89,7 @@ const requestNoiseGeneration = async (user_id, data) => {
   });
   
   const threeD = await ThreeD.create({
-    task_file: data.file,
+    task_file: data.file, 
     task_id: task.task_id,
     user_id: user_id,
   });
