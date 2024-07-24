@@ -6,8 +6,6 @@ const { singleFileUpload, multipleFileUpload } = require('../../middlewares/user
 
 const router = express.Router();
 
-// multer 메모리 저장소 설정
-
 // Protect all routes under workspace with JWT authentication
 router.use(authorizeAccessToken);
 
