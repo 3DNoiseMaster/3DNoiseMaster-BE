@@ -39,8 +39,7 @@ const downloadTasks = async (user_id, task_id) => {
   if (threed.user_id !== user_id) {
     return null;
   }
-  //return threed.result_file;
-  return threed.task_file;
+  return threed.result_file;
 };
 
 const getTaskNameById = async (user_id, task_id) => {
