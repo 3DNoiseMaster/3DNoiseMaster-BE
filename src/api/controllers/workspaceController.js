@@ -50,14 +50,13 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  */
 const deleteTask = asyncHandler(async (req, res, next) => {
   const { user } = req;
-  const { task_id } = req.body;
+  const { task_id } = req.query;
   const result = await workspaceService.deleteTask(user.user_id, task_id);
   if (result.status == 404) {
     return next(new ErrorResponse(httpStatus.NOT_FOUND, httpMessage[httpStatus.NOT_FOUND]));
   }
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, '작업물이 성공적으로 삭제되었습니다.'));
 });
-
 
 /**
  * @desc Request noise removal
