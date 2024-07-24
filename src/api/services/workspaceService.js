@@ -22,7 +22,7 @@ const { Task, ThreeD, Noise } = require('../models');
     const totalCount = tasks.length;
     let runningCount = totalCount - beforeCount - doneCount;
   
-    return {
+    return { 
       totalCount,
       beforeCount,
       runningCount,
@@ -59,9 +59,11 @@ const deleteTask = async (user_id, task_id) => {
   if (!task) {
     return { status: 404 };
   }
-  task.destroy();
+  
+  await task.destroy();
   return { status: 200 };
 };
+
 
 const requestNoiseRemoval = async (user_id, data) => {
   // validator 코드 넣으면 좋을듯
@@ -85,20 +87,23 @@ const requestNoiseGeneration = async (user_id, data) => {
     task_division: 'noise_gen',
     user_id: user_id,
   });
+  
   const threeD = await ThreeD.create({
-    task_file: data.file,
+    task_file: data.file, 
     task_id: task.task_id,
     user_id: user_id,
   });
+  
   const noise = await Noise.create({
     task_id: task.task_id,
     noise_type: data.noiseType,
     noise_level: data.noiseLevel,
-  })
+  });
   console.log(`Noise generate requested by user ${user_id} for task ${task.task_id}`);
-
+  
   return task;
 };
+
 
 const requestErrorComparison = async (user_id, data) => {
   const task = await Task.create({
