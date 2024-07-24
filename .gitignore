@@ -130,6 +130,8 @@ dist
 .pnp.*
 src/api/controllers/.cph/.authController.js_5ae2a8368f09001d1b1868e2a0d5cb42.prob
 
+uploadsOBJ
+
 # C++
 src/cpp
 uploadsOBJ
