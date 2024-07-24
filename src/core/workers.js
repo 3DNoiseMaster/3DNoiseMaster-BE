@@ -1,5 +1,6 @@
 // External module imports
 const { Worker } = require('worker_threads');
+const logger = require('../config/logger');
 const path = require('path');
 
 // // Internal module imports
@@ -7,21 +8,21 @@ const path = require('path');
 // const { exec } = require('child_process');
 
 const startWorkers = async () => {
-  console.log('Starting workers...');
+  logger.info('Starting workers...');
 
   const worker = new Worker(path.resolve(__dirname, '../api/workers/workers.js'));
 
   worker.on('message', (message) => {
-    console.log('Worker response:', message);
+    logger.info(`Worker response: ${message}`);
   });
 
   worker.on('error', (error) => {
-    console.error('Worker error:', error);
+    logger.error(`Worker error: ${error}`);
   });
 
   worker.on('exit', (code) => {
     if (code !== 0) {
-      console.error(`Worker stopped with exit code ${code}`);
+      logger.error(`Worker stopped with exit code ${code}`);
     }
   });
 };

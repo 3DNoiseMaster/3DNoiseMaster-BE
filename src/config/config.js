@@ -31,6 +31,7 @@ const envVarsSchema = Joi.object()
     JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number().default(10).description('minutes after which reset password token expires'),
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number().default(10).description('minutes after which verify email token expires'),
     CPP_PATH: Joi.string().description('C++.exe Path'),
+    UPLOAD_PATH: Joi.string().description('OBJ upload Path'),
   })
   .unknown();
 
@@ -72,5 +73,6 @@ module.exports = {
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
     secret: envVars.JWT_ACCESS_SECRET
   },
-  cpp_path: envVars.CPP_PATH
+  cpp_path: envVars.CPP_PATH,
+  upload_path: envVars.UPLOAD_PATH
 };
