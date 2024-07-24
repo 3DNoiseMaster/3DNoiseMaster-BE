@@ -1,0 +1,1 @@
+module.exports.multerUploader = require('./multer-uploader');
