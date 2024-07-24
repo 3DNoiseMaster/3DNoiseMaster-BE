@@ -65,7 +65,10 @@ const deleteTask = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
-  const data = req.body;
+  const data = {
+    task_name: req.body.task_name,
+    file: req.file.path, 
+  };
   const result = await workspaceService.requestNoiseRemoval(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
@@ -81,7 +84,12 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
-  const data = req.body;
+  const data = {
+    task_name: req.body.task_name,
+    noiseType: req.body.noiseType,
+    noiseLevel: req.body.noiseLevel,
+    file: req.file.path, 
+  };
   const result = await workspaceService.requestNoiseGeneration(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
@@ -97,7 +105,11 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
-  const data = req.body;
+  const data = {
+    task_name: req.body.task_name,
+    file1: req.files.file1[0].path,
+    file2: req.files.file2[0].path, 
+  };
   const result = await workspaceService.requestErrorComparison(req.user.user_id, data);
   res.status(httpStatus.CREATED).json(
     new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {

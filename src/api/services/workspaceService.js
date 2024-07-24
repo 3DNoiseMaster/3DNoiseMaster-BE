@@ -22,7 +22,7 @@ const { Task, ThreeD, Noise } = require('../models');
     const totalCount = tasks.length;
     let runningCount = totalCount - beforeCount - doneCount;
   
-    return {
+    return { 
       totalCount,
       beforeCount,
       runningCount,
@@ -85,20 +85,23 @@ const requestNoiseGeneration = async (user_id, data) => {
     task_division: 'noise_gen',
     user_id: user_id,
   });
+  
   const threeD = await ThreeD.create({
     task_file: data.file,
     task_id: task.task_id,
     user_id: user_id,
   });
+  
   const noise = await Noise.create({
     task_id: task.task_id,
     noise_type: data.noiseType,
     noise_level: data.noiseLevel,
-  })
+  });
   console.log(`Noise generate requested by user ${user_id} for task ${task.task_id}`);
-
+  
   return task;
 };
+
 
 const requestErrorComparison = async (user_id, data) => {
   const task = await Task.create({
