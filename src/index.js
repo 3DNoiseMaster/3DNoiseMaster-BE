@@ -1,5 +1,8 @@
 // Internal module imports
-npm
+const { startServer } = require('./core/server');
+const { startWorkers } = require('./core/workers');
+const { connectDB } = require('./core/database');
+
 const init = async () => {
   // database connection
   await connectDB();
