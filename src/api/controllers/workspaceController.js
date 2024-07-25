@@ -32,7 +32,7 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
   const { user } = req;
-  const { task_id } = req.body;
+  const { task_id } = req.query;
   const threed = await workspaceService.downloadTasks(user.user_id, task_id);
   const taskName = await workspaceService.getTaskNameById(user.user_id, task_id);
   if (!threed || !taskName) {
