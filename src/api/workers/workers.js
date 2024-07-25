@@ -83,7 +83,6 @@ const processTask = async () => {
       if (code === 0) {
         task.status = 100;
         await task.save();
-        await delay(1000);
 
         const resultFilePath = path.join(config.file_temp_path, 'mesh2.obj');
         const resultFileContent = await fs.readFile(resultFilePath, 'utf8');
