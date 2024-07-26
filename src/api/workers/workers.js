@@ -73,8 +73,18 @@ const processTask = async () => {
     });
 
     child.stderr.on('data', async (data) => {
-      const stderrString = decodeUTF_8(data);
-      parentPort.postMessage(`Task ${task.task_id} stderr: ${stderrString}`);
+      const ignorePatterns = [
+        'Warning! Material file',
+        '  Warning! Material file',
+      ];
+    
+      // 에러 메시지가 무시할 패턴에 해당하는지 확인합니다.
+      const shouldIgnore = ignorePatterns.some(pattern => stderrString.includes(pattern));
+    
+      // 무시할 패턴이 아닌 경우에만 메시지를 전송합니다.
+      if (!shouldIgnore) {
+        parentPort.postMessage(`Task ${task.task_id} stderr: ${stderrString}`);
+      }
     });
 
     child.on('close', async (code) => {
