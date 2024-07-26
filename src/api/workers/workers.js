@@ -35,7 +35,7 @@ const processTask = async () => {
         noise = await Noise.findByTaskId(task.task_id);
     } else if (task.task_division === 'error_comp') {
       const taskFilePath2 = path.join(config.file_temp_path, 'mesh2.obj');
-      await fs.writeFile(taskFilePath2, threed.task_file, 'utf8');
+      await fs.writeFile(taskFilePath2, threed.result_file, 'utf8');
     }
 
     const cppExecutablePath = path.resolve(config.cpp_path, config.cpp_file_name);
@@ -75,8 +75,6 @@ const processTask = async () => {
     child.stderr.on('data', async (data) => {
       const stderrString = decodeUTF_8(data);
       parentPort.postMessage(`Task ${task.task_id} stderr: ${stderrString}`);
-      task.status = 200;
-      await task.save();
     });
 
     child.on('close', async (code) => {
@@ -91,6 +89,8 @@ const processTask = async () => {
 
         parentPort.postMessage(`Task {${task.task_id}} Name: {${task.task_name}} processed successfully`);
       } else {
+        task.status = 200;
+        await task.save();
         parentPort.postMessage(`Task ${task.task_id} Name: ${task.task_name} failed with exit code ${code}`);
       }
       isProcessing = false;
