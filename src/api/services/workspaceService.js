@@ -1,8 +1,16 @@
 const { Task, ThreeD, Noise } = require('../models');
 
   const getTasks = async (user_id) => {
-    const tasks = await Task.findAllTasks(user_id, ['task_id', 'task_name', 'status', 'date']);
-    return tasks;
+    const tasks = await Task.findAllTasks(user_id, ['task_id', 'task_name', 'status', 'date', 'task_division']);
+    const results = await Promise.all(tasks.map(async (task) => {
+      const threed = await ThreeD.findErrorRateById(task.task_id)
+  
+      return {
+        ...task.toJSON(),
+        error_rate: threed ? threed.error_rate : null,
+      };
+    }));
+    return results;
   };
 
   const getTaskCount = async (user_id) => {

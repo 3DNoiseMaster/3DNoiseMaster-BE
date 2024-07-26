@@ -6,6 +6,13 @@ class ThreeD extends Model {
   static async findByTaskId(id) {
     return this.findOne({ where: { task_id : id } });
   }
+
+  static async findErrorRateById(id) {
+    return this.findOne({
+      where: { task_id: id },
+      attributes: ['error_rate'],
+    });
+  }
 }
 
 ThreeD.init(
