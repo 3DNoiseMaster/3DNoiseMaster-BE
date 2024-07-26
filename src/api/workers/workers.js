@@ -75,8 +75,6 @@ const processTask = async () => {
     child.stderr.on('data', async (data) => {
       const stderrString = decodeUTF_8(data);
       parentPort.postMessage(`Task ${task.task_id} stderr: ${stderrString}`);
-      task.status = 200;
-      await task.save();
     });
 
     child.on('close', async (code) => {
@@ -91,6 +89,8 @@ const processTask = async () => {
 
         parentPort.postMessage(`Task {${task.task_id}} Name: {${task.task_name}} processed successfully`);
       } else {
+        task.status = 200;
+        await task.save();
         parentPort.postMessage(`Task ${task.task_id} Name: ${task.task_name} failed with exit code ${code}`);
       }
       isProcessing = false;
