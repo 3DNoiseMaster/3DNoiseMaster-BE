@@ -35,7 +35,7 @@ const processTask = async () => {
         noise = await Noise.findByTaskId(task.task_id);
     } else if (task.task_division === 'error_comp') {
       const taskFilePath2 = path.join(config.file_temp_path, 'mesh2.obj');
-      await fs.writeFile(taskFilePath2, threed.task_file, 'utf8');
+      await fs.writeFile(taskFilePath2, threed.result_file, 'utf8');
     }
 
     const cppExecutablePath = path.resolve(config.cpp_path, config.cpp_file_name);
@@ -83,7 +83,6 @@ const processTask = async () => {
       if (code === 0) {
         task.status = 100;
         await task.save();
-        await delay(1000);
 
         const resultFilePath = path.join(config.file_temp_path, 'mesh2.obj');
         const resultFileContent = await fs.readFile(resultFilePath, 'utf8');
