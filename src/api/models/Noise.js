@@ -19,8 +19,15 @@ Noise.init(
       },
     },
     noise_type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('Gaussian', 'Impursive'),
       allowNull: false,
+      validate: {
+        notNull: { msg: 'Noise Type is required' },
+        isIn: {
+          args: [['Gaussian', 'Impursive']],
+          msg: 'Noise Type must be one of: Gaussian, Impursive',
+        },
+      },
     },
     noise_level: {
       type: DataTypes.INTEGER,
