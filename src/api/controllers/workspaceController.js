@@ -38,7 +38,8 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
   if (!threed || !taskName) {
     return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidFileRequest']));
   }
-  res.setHeader('Content-Disposition', `attachment; filename=${taskName}_result.obj`) ;
+  const encodedFileName = encodeURIComponent(`${taskName}_result.obj`);
+  res.setHeader('Content-Disposition', `attachment; filename=${taskName}_result.obj`);
   res.setHeader('Content-Type', 'application/x-obj');
   res.send(threed);
 });
