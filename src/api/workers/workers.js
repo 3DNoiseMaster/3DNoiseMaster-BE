@@ -73,6 +73,7 @@ const processTask = async () => {
     });
 
     child.stderr.on('data', async (data) => {
+      const stderrString = decodeUTF_8(data);
       const ignorePatterns = [
         'Warning! Material file',
         '  Warning! Material file',
