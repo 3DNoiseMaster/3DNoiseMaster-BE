@@ -10,6 +10,7 @@ const router = express.Router();
 router.use(authorizeAccessToken);
 
 router.get('/tasks', workspaceController.getTasks);
+router.get('/tasks/check', workspaceController.getCheckTask);
 router.get('/tasks/count', workspaceController.getTaskCount);
 router.get('/tasks/download', workspaceController.downloadTasks);
 router.delete('/tasks/delete', workspaceController.deleteTask);
