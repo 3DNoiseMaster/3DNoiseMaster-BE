@@ -13,6 +13,30 @@ const { Task, ThreeD, Noise } = require('../models');
     return results;
   };
 
+  const getTaskOne = async (user_id, task_id) => {
+    const task = await Task.findByTaskId(task_id);
+    if (!task) {
+      return null;
+    }
+    if (task.user_id !== user_id) {
+      return null;
+    }
+
+    let taskWithDetails = task.toJSON();
+    
+    if (task.task_division == 'noise_gen') {
+      const noise = await Noise.findByTaskId(task_id);
+      taskWithDetails = {
+        ...taskWithDetails,
+        noise: noise ? {
+          noise_type: noise.noise_type,
+          noise_level: noise.noise_level,
+        } : null,
+      };
+    }
+    return taskWithDetails;
+  }
+
   const getTaskCount = async (user_id) => {
     const tasks = await Task.findAllTasks(user_id, ['status']);
   
@@ -130,6 +154,7 @@ const requestErrorComparison = async (user_id, data) => {
 
 module.exports = {
   getTasks,
+  getTaskOne,
   getTaskCount,
   downloadTasks,
   getTaskNameById,
