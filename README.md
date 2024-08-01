@@ -10,11 +10,13 @@
 └─ src
    ├─ api
    │  ├─ controllers
+   │  │  ├─ .cph
    │  │  ├─ authController.js
    │  │  ├─ index.js
    │  │  ├─ userController.js
    │  │  └─ workspaceController.js
    │  ├─ lib
+   │  │  ├─ index.js
    │  │  └─ multer-uploader.js
    │  ├─ middlewares
    │  │  ├─ authentication
@@ -34,6 +36,9 @@
    │  │     └─ threeDFileUpload.js
    │  ├─ models
    │  │  ├─ index.js
+   │  │  ├─ Noise.js
+   │  │  ├─ Task.js
+   │  │  ├─ ThreeD.js
    │  │  ├─ Token.js
    │  │  └─ User.js
    │  ├─ services
@@ -55,7 +60,8 @@
    │  │  ├─ memberValidate.js
    │  │  └─ validate.js
    │  └─ workers
-   │     └─ index.js
+   │     ├─ index.js
+   │     └─ workers.js
    ├─ config
    │  ├─ compression.js
    │  ├─ config.js
