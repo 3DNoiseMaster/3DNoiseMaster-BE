@@ -13,6 +13,7 @@ router.get('/tasks', workspaceController.getTasks);
 router.get('/tasks/check', workspaceController.getCheckTask);
 router.get('/tasks/count', workspaceController.getTaskCount);
 router.get('/tasks/download', workspaceController.downloadTasks);
+router.get('/tasks/check', workspaceController.getCheckTask);
 router.delete('/tasks/delete', workspaceController.deleteTask);
 
 // 파일 업로드 미들웨어 추가
