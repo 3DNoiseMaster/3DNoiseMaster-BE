@@ -14,10 +14,15 @@ const verifyCallback = {};
  */
 verifyCallback.ACCESS = (req, resolve, reject) => {
   return (err, user, info) => {
-    if (err || !user) {
+    if (err) {
+      //console.log('Authentication error:', err); // 에러 로그
       return reject(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage[httpStatus.UNAUTHORIZED]));
     }
-    // set user to request object
+    if (!user) {
+      //console.log('No user found:', info); // 사용자 없음 로그
+      return reject(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage[httpStatus.UNAUTHORIZED]));
+    }
+    //console.log('User authenticated:', user); // 인증된 사용자 로그
     req.user = user;
     resolve();
   };
@@ -33,6 +38,7 @@ const authorizeAccessToken = (req, res, next) => {
     .then(() => next())
     .catch((err) => next(err));
 };
+
 
 // Module exports
 module.exports = {

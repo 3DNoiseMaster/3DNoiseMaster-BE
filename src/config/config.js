@@ -2,10 +2,9 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const Joi = require('joi');
-const { Sequelize } = require('sequelize');
 
 // init dotenv path
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env'), override: true });
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -31,6 +30,9 @@ const envVarsSchema = Joi.object()
     JWT_COOKIE_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
     JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number().default(10).description('minutes after which reset password token expires'),
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number().default(10).description('minutes after which verify email token expires'),
+    CPP_PATH: Joi.string().description('C++.exe Path'),
+    CPP_FILE_NAME: Joi.string().description('C++.exe file name'),
+    FILE_TEMP_PATH: Joi.string().description('OBJ file temp Path'),
   })
   .unknown();
 
@@ -41,26 +43,6 @@ const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' }
 if (error) {
   throw new Error(`Config Validation Error: ${error.message}`);
 }
-
-// Sequelize 연결 설정
-const sequelize = new Sequelize(envVars.DB_NAME, envVars.DB_USER, envVars.DB_PASS, {
-  host: envVars.DB_HOST,
-  dialect: 'mysql',
-  logging: envVars.NODE_ENV === 'development' ? console.log : false,
-});
-
-// 데이터베이스 연결 테스트
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection to the database has been established successfully.');
-
-    // 여기서부터 추가적인 데이터베이스 작업을 수행할 수 있습니다.
-
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-})();
 
 // Module exports
 module.exports = {
@@ -83,11 +65,16 @@ module.exports = {
     refreshSecret: envVars.JWT_REFRESH_SECRET,
     resetPasswordSecret: envVars.JWT_RESET_PASSWORD_SECRET,
     verifyEmailSecret: envVars.JWT_VERIFY_EMAIL_SECRET,
+    algorithm: 'HS384',
     session: envVars.JWT_SESSION,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     cookieExpirationDays: envVars.JWT_COOKIE_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+    secret: envVars.JWT_ACCESS_SECRET
   },
+  cpp_path: envVars.CPP_PATH,
+  cpp_file_name: envVars.CPP_FILE_NAME,
+  file_temp_path: envVars.FILE_TEMP_PATH,
 };

@@ -10,11 +10,13 @@
 └─ src
    ├─ api
    │  ├─ controllers
+   │  │  ├─ .cph
    │  │  ├─ authController.js
    │  │  ├─ index.js
-   │  │  ├─ memberController.js
+   │  │  ├─ userController.js
    │  │  └─ workspaceController.js
    │  ├─ lib
+   │  │  ├─ index.js
    │  │  └─ multer-uploader.js
    │  ├─ middlewares
    │  │  ├─ authentication
@@ -26,19 +28,23 @@
    │  │  │  ├─ ignoreFavicon.js
    │  │  │  ├─ index.js
    │  │  │  └─ notFoundHandler.js
-   │  │  ├─ members
-   │  │  │  └─ threeDFileUpload.js
-   │  │  └─ permissions
-   │  │     ├─ grantAccess.js
-   │  │     ├─ index.js
-   │  │     └─ members.permission.js
+   │  │  ├─ permissions
+   │  │  │  ├─ grantAccess.js
+   │  │  │  ├─ index.js
+   │  │  │  └─ users.permission.js
+   │  │  └─ users
+   │  │     └─ threeDFileUpload.js
    │  ├─ models
    │  │  ├─ index.js
-   │  │  ├─ Member.js
-   │  │  └─ Token.js
+   │  │  ├─ Noise.js
+   │  │  ├─ Task.js
+   │  │  ├─ ThreeD.js
+   │  │  ├─ Token.js
+   │  │  └─ User.js
    │  ├─ services
+   │  │  ├─ authService.js
    │  │  ├─ index.js
-   │  │  ├─ memberService.js
+   │  │  ├─ userService.js
    │  │  └─ workspaceService.js
    │  ├─ utils
    │  │  ├─ common.js
@@ -54,7 +60,8 @@
    │  │  ├─ memberValidate.js
    │  │  └─ validate.js
    │  └─ workers
-   │     └─ index.js
+   │     ├─ index.js
+   │     └─ workers.js
    ├─ config
    │  ├─ compression.js
    │  ├─ config.js

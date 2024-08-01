@@ -2,7 +2,7 @@
 const { Strategy, ExtractJwt } = require('passport-jwt');
 
 // Internal module imports
-const { User } = require('../api/models'); // User 모델을 가져옵니다.
+const { User } = require('../api/models');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
 
@@ -48,7 +48,7 @@ jwtStrategy.ACCESS = new Strategy(
     try {
       // Check if the token type is 'ACCESS'
       if (jwtPayload.type === tokenTypes.ACCESS) {
-        const user = await User.findById(jwtPayload.sub);
+        const user = await User.findById(jwtPayload.id);
         if (user) {
           return done(null, user);
         }
@@ -60,7 +60,6 @@ jwtStrategy.ACCESS = new Strategy(
     }
   }
 );
-
 // Module exports
 module.exports = (passport) => {
   passport.use('jwt_access', jwtStrategy.ACCESS);

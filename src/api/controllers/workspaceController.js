@@ -1,5 +1,5 @@
 // Internal module imports
-const { SuccessResponse } = require('../utils');
+const { SuccessResponse, ErrorResponse } = require('../utils');
 const { asyncHandler } = require('../utils').common;
 const { workspaceService } = require('../services');
 const { httpStatus, httpMessage } = require('../../config/custom-http-status');
@@ -9,9 +9,30 @@ const { httpStatus, httpMessage } = require('../../config/custom-http-status');
  * @route GET /api/v1/workspace/tasks
  * @access Private
  */
+// 차후 양이 많아질 것을 대비해 Page로 나누어야할것
 const getTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.getTasks(req.user.id);
+  const tasks = await workspaceService.getTasks(req.user.user_id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
+});
+
+/**
+ * @desc Get workspace task
+ * @route GET /api/v1/workspace/tasks/check
+ * @access Private
+ */
+const getCheckTask = asyncHandler(async (req, res, next) => {
+  const { task_id } = req.query;
+
+  if (!task_id) {
+    return next(new ErrorResponse(httpStatus.BAD_REQUEST, 'Task ID is required'));
+  }
+
+  const task = await workspaceService.getTaskOne(req.user.user_id, task_id);
+  if (!task) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, 'Invalid task request'));
+  }
+
+  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, 'Task retrieved successfully', { task }));
 });
 
 /**
@@ -20,7 +41,7 @@ const getTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const getTaskCount = asyncHandler(async (req, res, next) => {
-  const count = await workspaceService.getTaskCount(req.user.id);
+  const count = await workspaceService.getTaskCount(req.user.user_id);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { count }));
 });
 
@@ -30,8 +51,17 @@ const getTaskCount = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const downloadTasks = asyncHandler(async (req, res, next) => {
-  const tasks = await workspaceService.downloadTasks(req.user.id);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { tasks }));
+  const { user } = req;
+  const { task_id } = req.query;
+  const threed = await workspaceService.downloadTasks(user.user_id, task_id);
+  const taskName = await workspaceService.getTaskNameById(user.user_id, task_id);
+  if (!threed || !taskName) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidFileRequest']));
+  }
+  const encodedFileName = encodeURIComponent(`${taskName}_result.obj`);
+  res.setHeader('Content-Disposition', `attachment; filename=${encodedFileName}.obj`);
+  res.setHeader('Content-Type', 'application/x-obj');
+  res.send(threed);
 });
 
 /**
@@ -40,15 +70,14 @@ const downloadTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const deleteTask = asyncHandler(async (req, res, next) => {
-  const { taskId } = req.body;
-  const task = await workspaceService.getTaskById(taskId);
-  if (!task) {
-    return next(new ErrorResponse(404, 'Task not found'));
+  const { user } = req;
+  const { task_id } = req.query;
+  const result = await workspaceService.deleteTask(user.user_id, task_id);
+  if (result.status == 404) {
+    return next(new ErrorResponse(httpStatus.NOT_FOUND, httpMessage[httpStatus.NOT_FOUND]));
   }
-  await workspaceService.deleteTask(taskId);
   res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, '작업물이 성공적으로 삭제되었습니다.'));
 });
-
 
 /**
  * @desc Request noise removal
@@ -56,9 +85,17 @@ const deleteTask = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
-  const data = req.body;
-  const result = await workspaceService.requestNoiseRemoval(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const data = {
+    task_name: req.body.task_name,
+    file: req.file.buffer, 
+  };
+  const result = await workspaceService.requestNoiseRemoval(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 제거 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -67,9 +104,19 @@ const requestNoiseRemoval = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
-  const data = req.body;
-  const result = await workspaceService.requestNoiseGeneration(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const data = {
+    task_name: req.body.task_name,
+    noiseType: req.body.noiseType,
+    noiseLevel: req.body.noiseLevel,
+    file: req.file.buffer, 
+  };
+  const result = await workspaceService.requestNoiseGeneration(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "잡음 생성 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 /**
@@ -78,14 +125,24 @@ const requestNoiseGeneration = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const requestErrorComparison = asyncHandler(async (req, res, next) => {
-  const data = req.body;
-  const result = await workspaceService.requestErrorComparison(req.user.id, data);
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { result }));
+  const data = {
+    task_name: req.body.task_name,
+    file1: req.files.file1[0].buffer,
+    file2: req.files.file2[0].buffer, 
+  };
+  const result = await workspaceService.requestErrorComparison(req.user.user_id, data);
+  res.status(httpStatus.CREATED).json(
+    new SuccessResponse(httpStatus.CREATED, httpMessage[httpStatus.CREATED], {
+      message : "오차율 비교 요청이 성공적으로 처리되었습니다.",
+      task_id: result.task_id
+    })
+  );
 });
 
 // Module exports
 module.exports = {
   getTasks,
+  getCheckTask,
   getTaskCount,
   downloadTasks,
   deleteTask,

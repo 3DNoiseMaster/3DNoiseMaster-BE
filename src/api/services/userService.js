@@ -4,8 +4,8 @@ const createUser = async (userData) => {
   return await User.create(userData);
 };
 
-const loginUser = async (username, password) => {
-  const user = await User.findOne({ where: { username } });
+const loginUser = async (id, password) => {
+  const user = await User.findOne({ where: { id } });
   if (user && (await user.isPasswordMatch(password))) {
     return user;
   }

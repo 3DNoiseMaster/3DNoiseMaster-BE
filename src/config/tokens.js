@@ -1,6 +1,6 @@
 // define token types
 const tokenTypes = {
-    ACCESS: 'access',
+    ACCESS: 'ACCESS',
     REFRESH: 'refresh',
     RESET_PASSWORD: 'resetPassword',
     VERIFY_EMAIL: 'verifyEmail',
