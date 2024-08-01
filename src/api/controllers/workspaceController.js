@@ -16,6 +16,26 @@ const getTasks = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc Get workspace task
+ * @route GET /api/v1/workspace/tasks/check
+ * @access Private
+ */
+const getCheckTask = asyncHandler(async (req, res, next) => {
+  const { task_id } = req.query;
+
+  if (!task_id) {
+    return next(new ErrorResponse(httpStatus.BAD_REQUEST, 'Task ID is required'));
+  }
+
+  const task = await workspaceService.getTaskOne(req.user.user_id, task_id);
+  if (!task) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, 'Invalid task request'));
+  }
+
+  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, 'Task retrieved successfully', { task }));
+});
+
+/**
  * @desc Get task count
  * @route GET /api/v1/workspace/tasks/count
  * @access Private
@@ -122,6 +142,7 @@ const requestErrorComparison = asyncHandler(async (req, res, next) => {
 // Module exports
 module.exports = {
   getTasks,
+  getCheckTask,
   getTaskCount,
   downloadTasks,
   deleteTask,
