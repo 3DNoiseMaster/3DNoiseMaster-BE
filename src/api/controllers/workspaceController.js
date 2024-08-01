@@ -21,11 +21,18 @@ const getTasks = asyncHandler(async (req, res, next) => {
  * @access Private
  */
 const getCheckTask = asyncHandler(async (req, res, next) => {
-  const task = await workspaceService.getTaskOne(req.user.user_id, req.body.task_id);
-  if (!task) {
-    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, httpMessage['InvalidFileRequest']));
+  const { task_id } = req.query;
+
+  if (!task_id) {
+    return next(new ErrorResponse(httpStatus.BAD_REQUEST, 'Task ID is required'));
   }
-  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, httpMessage[httpStatus.OK], { task }));
+
+  const task = await workspaceService.getTaskOne(req.user.user_id, task_id);
+  if (!task) {
+    return next(new ErrorResponse(httpStatus.UNAUTHORIZED, 'Invalid task request'));
+  }
+
+  res.status(httpStatus.OK).json(new SuccessResponse(httpStatus.OK, 'Task retrieved successfully', { task }));
 });
 
 /**

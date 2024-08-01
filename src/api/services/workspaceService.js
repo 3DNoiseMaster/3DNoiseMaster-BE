@@ -14,18 +14,18 @@ const { Task, ThreeD, Noise } = require('../models');
   };
 
   const getTaskOne = async (user_id, task_id) => {
-    const task = await Task.findByTaskId(task_id);
+    const task = await Task.findByPk(task_id);
     if (!task) {
       return null;
     }
     if (task.user_id !== user_id) {
       return null;
     }
-
+  
     let taskWithDetails = task.toJSON();
     
-    if (task.task_division == 'noise_gen') {
-      const noise = await Noise.findByTaskId(task_id);
+    if (task.task_division === 'noise_gen') {
+      const noise = await Noise.findOne({ where: { task_id } });
       taskWithDetails = {
         ...taskWithDetails,
         noise: noise ? {
@@ -34,8 +34,9 @@ const { Task, ThreeD, Noise } = require('../models');
         } : null,
       };
     }
+  
     return taskWithDetails;
-  }
+  };
 
   const getTaskCount = async (user_id) => {
     const tasks = await Task.findAllTasks(user_id, ['status']);
